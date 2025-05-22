@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile | Admin</title>
+    <link rel="stylesheet" th:href="@{/css/home_admin_style.css}">
+    <link rel="stylesheet" th:href="@{/css/edit-style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+    	.edit-container {
+            max-width: 800px; /* Increased width for two columns */
+        }
+        .form-fields {
+            display: flex;
+            gap: 30px;
+        }
+        .form-column {
+            flex: 1;
+        }
+        .form-footer {
+            margin-top: 300px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        	<a th:href="@{/ecom/admin_home}"><h2>Khine Myanmar</h2></a>
+            <h2>Administrator</h2>
+            <ul class="nav-menu">
+			    			    <li><a th:href="@{/ecom/admin_home}" class="active">
+			        <i class="fas fa-tachometer-alt"></i>
+			        Dashboard
+			    </a></li>
+			    <li><a th:href="@{/ecom/shop_mng_page}">
+			        <i class="fas fa-store"></i>
+			        Shops
+			    </a></li>
+			    <li><a th:href="@{/ecom/delivery_mng_page}">
+			        <i class="fas fa-truck"></i>
+			        Delivery Agents
+			    </a></li>
+			    <li><a th:href="@{/ecom/view-orders}">
+			        <i class="fas fa-shopping-cart"></i>
+			        Orders
+			    </a></li>
+			    <li><a th:href="@{/ecom/customer_mng_page}">
+			        <i class="fas fa-user"></i>
+			        Customers
+			    </a></li>
+			    <li><a th:href="@{/ecom/product_mng_page}">
+			        <i class="fas fa-box"></i>
+			        Products
+			    </a></li>
+			    <li><a th:href="@{/ecom/product_category_mgn_page}">
+			        <i class="fas fa-list"></i>
+			        Categories
+			    </a></li>
+			    <li><a th:href="@{/ecom/edit-profile/{adminId}(adminId=${admin.adminId})}">
+			        <i class="fas fa-edit"></i>
+			        Edit Profile
+			    </a></li>
+			    <li><a th:href="@{/ecom/deli/login}">
+			        <i class="fas fa-sign-out-alt"></i>
+			        Log out
+			    </a></li>
+			</ul>
+        </div>
+    
+    <div class="edit-container">
+        <form th:action="@{/ecom/update-profile/{adminId}(adminId=${adminTmp.adminId})}" method="post" enctype="multipart/form-data" th:object="${admin}">
+            <div class="form-container">
+                <div class="form-fields">
+                    <!-- Left Column - Existing Fields -->
+                    <div class="form-column">
+                        <div class="form-group">
+                            <label for="first-name">First Name</label>
+                            <input type="text" id="first-name" th:field="${adminTmp.firstName}" name="first_name">
+                        </div>
+                        <div class="form-group">
+                            <label for="last-name">Last Name</label>
+                            <input type="text" id="last-name" th:field="${adminTmp.lastName}" name="last_name">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" th:field="${adminTmp.email}" name="email">
+                        </div>
+                        <div class="form-group">
+                            <label for="contact">Phone Number</label>
+                            <input type="tel" id="contact" th:field="${adminTmp.phoneNumber}" name="contact">
+                        </div>
+                    </div>
+
+                    <!-- Right Column - Password Fields -->
+                    <div class="form-column">
+                        <div class="form-group">
+                            <label for="current-password">Current Password</label>
+                            <input type="password" id="current-password" name="currentPassword">
+                        </div>
+                        <div class="form-group">
+                            <label for="new-password">New Password</label>
+                            <input type="password" id="new-password" name="newPassword">
+                        </div>
+                        <div class="form-group">
+                            <label for="confirm-password">Confirm New Password</label>
+                            <input type="password" id="confirm-password" name="confirmPassword">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Save Button -->
+                <div class="form-footer">
+				    <button type="submit" style="display: inline-flex; align-items: center; gap: 8px; padding-right: 30px; padding-left: 20px;">
+				        <i class="fas fa-save"></i>
+				        <span>Save</span>
+				    </button>
+				</div>
+            </div>
+        </form>
+    </div>
+        
+    </script>
+        <script th:if="${success}">
+	    Swal.fire({
+	        icon: 'success',
+	        title: 'Success!',
+	        text: '[[${success}]]',
+	        timer: 3000,
+	        showConfirmButton: false
+	    });
+	</script>
+</body>
+</html>

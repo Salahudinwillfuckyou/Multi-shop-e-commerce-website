@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop Dashboard | Grab Turtle</title>
+    <link rel="stylesheet" th:href="@{/css/home_admin_style.css}">
+    <link rel="stylesheet" th:href="@{/css/register-style.css}"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+    	.container
+    	{
+    		margin-top: 10px;
+    	}
+    	.form-section h2
+    	{
+    		margin-bottom: 30px;
+    	}
+    	button
+    	{
+    		margin-top: 50px;
+    		width: 20%;
+    	}
+    	.form-group input
+    	{
+    		margin-right: 300px;
+    	}
+    	.form-group label
+    	{
+    		margin-top: 10px;
+    	}
+    	select
+    	{
+    		width: 44.4%;
+    		padding: 10px;
+    		margin-right: 300px;
+    	}
+
+    	.input-with-symbol 
+    	{
+    		margin-right: 300px;
+		    width: 44.4%;
+		}
+		
+		.input-with-symbol input {
+			padding-right: 55px;
+		    margin-right: 300px; /* Make space for the symbol */
+		    width: 100%;
+		}
+		
+		.currency-symbol {
+		    position: absolute;
+		    right: 315px;
+		    top: 50%;
+		    transform: translateY(-50%);
+		    color: #666;
+		    pointer-events: none; /* Prevent interaction with the symbol */
+		}
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        	<a th:href="@{/ecom/shop/index}"><h2>Khine Myanmar</h2></a>
+            <h2>Shop Administrator</h2>
+			<ul class="nav-menu">
+			    <li><a th:href="@{/ecom/shop/index}" class="active">
+			        <i class="fas fa-tachometer-alt"></i>
+			        Dashboard
+			    </a></li>
+			    <li><a th:href="@{/ecom/shop/view-orders}">
+			        <i class="fas fa-shopping-cart"></i>
+			        Orders
+			    </a></li>
+			    <li><a th:href="@{/ecom/shop/deliveries}">
+			        <i class="fas fa-truck"></i>
+			        Delivery Agents
+			    </a></li>
+			    <li><a th:href="@{/ecom/shop/products}">
+			        <i class="fas fa-box"></i>
+			        Products
+			    </a></li>
+			    <li><a th:href="@{/ecom/shop/edit-shop/{shopId}(shopId=${shop.shopId})}">
+			        <i class="fas fa-edit"></i>
+			        Edit Shop Profile
+			    </a></li>
+			    <li><a th:href="@{/ecom/shop/login}">
+			        <i class="fas fa-sign-out-alt"></i>
+			        Log out
+			    </a></li>
+			</ul>
+        </div>
+
+    <div class="container">
+        <div class="form-section">
+            <h2>Product Registration</h2>
+            <form th:action="@{/ecom/shop/register-product/{shopId}(shopId=${shop.shopId})}" method="post" enctype="multipart/form-data" th:object="${product}">
+                <div class="form-group">
+                	<label for="prod-name">Product Name</label>
+                	<input type="text" id="prod-name" th:field ="${product.productName}" name="prod_name" placeholder="Enter product name" required>
+	            </div>
+	            <div class="form-group">
+	                <label for="product-type">Product Type</label>
+	                <select id="product-type" th:field="${product.category}" name="product_type" required>
+					    <th:block th:each="cat : ${categories}">
+					        <option th:value ="${cat.categoryId}" th:text="${cat.categoryName}"></option>
+					    </th:block>
+					</select>
+	            </div>
+	            <div class="form-group">
+				    <label for="price">Unit Price</label>
+				    <div class="input-with-symbol">
+				        <input type="number" id="price" th:field="${product.unitPrice}" name="price" placeholder="Enter unit price" required>
+				        <span class="currency-symbol">MMK</span>
+				    </div>
+				</div>
+	            <div class="form-group">
+	                <label for="file">Product Image</label>
+	                <input type="file" id="file" name="file">
+	            </div>
+	            <button type="submit">Save</button>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+	    
+        function toggleDropdown(event, dropdownId) {
+            const dropdowns = document.querySelectorAll('.dropdown-content');
+            dropdowns.forEach(dropdown => {
+                if (dropdown.id !== dropdownId) {
+                    dropdown.style.display = 'none';
+                }
+            });
+
+            const dropdown = document.getElementById(dropdownId);
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Close dropdowns if clicked outside
+        window.onclick = function(event) {
+            if (!event.target.closest('.menu')) {
+                const dropdowns = document.querySelectorAll('.dropdown-content');
+                dropdowns.forEach(dropdown => {
+                    dropdown.style.display = 'none';
+                });
+            }
+        }
+
+        function toggleDropdown(event, dropdownId) {
+            const dropdowns = document.querySelectorAll('.dropdown-content');
+            dropdowns.forEach(dropdown => {
+                if (dropdown.id !== dropdownId) {
+                    dropdown.style.display = 'none'; // Close other dropdowns
+                }
+            });
+
+            const dropdown = document.getElementById(dropdownId);
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Close dropdowns if clicked outside
+        window.onclick = function(event) {
+            if (!event.target.closest('.button-section')) {
+                const dropdowns = document.querySelectorAll('.dropdown-content');
+                dropdowns.forEach(dropdown => {
+                    dropdown.style.display = 'none';
+                });
+            }
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Management | Admin | Grab Turtle</title>
+    <link rel="stylesheet" th:href="@{/css/home_admin_style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+
+        body, html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            overflow: hidden; /* Prevent horizontal scrolling */
+        }
+
+    form {
+        display: flex; /* Modified to arrange elements in a row */
+        align-items: flex-start;
+        margin: 30px auto; /* Dropped the form a little bit */
+        margin-top: 40px;
+        margin-left: 330px;
+        padding: 20px;
+        width: 100%;
+        max-width: 850px;
+        background-color: #ffffff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        flex-direction: row; /* Modified to arrange elements in a row */
+    }
+
+    form label {
+        font-size: 16px;
+        color: #333;
+        margin-right: 10px; /* Adjusted margin to separate elements in row */
+        font-weight: bold;
+        width: 200px; /* Fixed width to prevent overlap */
+        margin-top: 10px;
+    }
+
+    form input[type="text"] {
+        width: 100%;
+        padding: 10px;
+        font-size: 14px;
+        border: 1px solid #ddd;
+        margin-right: 10px; /* Adjusted margin to separate elements in row */
+        transition: border-color 0.3s ease;
+    }
+
+    form input[type="text"]:focus {
+        outline: none;
+		border-color: #004aad;
+		box-shadow: 0 0 0 2px #004aad;
+    }
+
+    form button[type="submit"] {
+        padding: 9px;
+        background-color: #004aad;
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+    }
+
+    form button[type="submit"]:hover {
+        background-color: #0080ff;
+    }
+
+	.categories-container {
+	    display: grid;
+	    grid-template-columns: repeat(4, 1fr);
+	    gap: 15px;
+	    /* Keep existing styles */
+	    margin: 0px auto;
+	    margin-left: 330px;
+	    padding: 20px;
+	    width: 90%;
+	    height: 70vh;
+	    max-width: 850px;
+	    background-color: #ffffff;
+	    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	    overflow-y: auto;
+	}
+	
+	.categories-container > h1,
+	.categories-container > br,
+	.categories-container > div[th\:if] {
+	    grid-column: 1 / -1;
+	}
+	
+
+    .categories-container h6 {
+    	padding-top: 10px;
+        font-size: 17px;
+        color: #555;
+        text-align: center;
+    }
+    .categories-container h7 {
+    	padding-left: 5px;
+        font-size: 15px;
+        color: #555;
+    }
+
+    .category-box {
+	    width: 100%; /* Fill grid column */
+	    height: 150px;
+	    margin-top: 0; /* Remove original top margin */
+	    /* Keep other styles */
+	    display: flex;
+	    flex-direction: column;
+	    align-items: left;
+	    justify-content: space-between;
+	    background-color: #f5f5f5;
+	    padding: 10px;
+	    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	    transition: transform 0.3s ease, box-shadow 0.3s ease;
+	    position: relative;
+	}
+	
+	.category-actions {
+	    display: flex;
+	    gap: 8px;
+	    width: 100%;
+	    justify-content: flex-start;
+	}
+	
+	.btn-action {
+	    padding: 6px;
+	    border: none;
+	    cursor: pointer;
+	    transition: background-color 0.3s;
+	    display: flex;
+	    border-radius: 4px;
+	    align-items: center;
+	    justify-content: center;
+	    width: 30px;
+	    height: 30px;
+	}
+	
+	.btn-edit {
+	    background-color: #007BFF;
+	    color: white;
+	}
+	
+	.btn-edit:hover {
+	    background-color: #0056b3;
+	}
+	
+	.btn-delete {
+	    background-color: #DC3545;
+	    color: white;
+	}
+	
+	.btn-delete:hover {
+	    background-color: #c82333;
+	}
+
+    .category-box:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .menu-section {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .sidebar {
+            width: 100%;
+            height: auto;
+            position: relative;
+            box-shadow: none;
+            margin-bottom: 20px;
+        }
+
+        .categories-container {
+            width: 100%;
+        }
+
+        form {
+            width: 100%;
+        }
+    }
+      
+    </style>
+    
+     <script>
+        // Optionally, use JavaScript for pop-up alerts
+        function showAlert(message) {
+            if (message) {
+                alert(message);
+            }
+        }
+    </script>
+    
+</head>
+<body th:attr="onload=(${errorMessage} != null) ? 'showAlert(\'' + ${errorMessage} + '\')' : ''">
+
+    <div class="sidebar">
+        	<a th:href="@{/ecom/admin_home}"><h2>Khine Myanmar</h2></a>
+            <h2>Administrator</h2>
+            <ul class="nav-menu">
+			    <li><a th:href="@{/ecom/admin_home}" class="active">
+			        <i class="fas fa-tachometer-alt"></i>
+			        Dashboard
+			    </a></li>
+			    <li><a th:href="@{/ecom/shop_mng_page}">
+			        <i class="fas fa-store"></i>
+			        Shops
+			    </a></li>
+			    <li><a th:href="@{/ecom/delivery_mng_page}">
+			        <i class="fas fa-truck"></i>
+			        Delivery Agents
+			    </a></li>
+			    <li><a th:href="@{/ecom/view-orders}">
+			        <i class="fas fa-shopping-cart"></i>
+			        Orders
+			    </a></li>
+			    <li><a th:href="@{/ecom/customer_mng_page}">
+			        <i class="fas fa-user"></i>
+			        Customers
+			    </a></li>
+			    <li><a th:href="@{/ecom/product_mng_page}">
+			        <i class="fas fa-box"></i>
+			        Products
+			    </a></li>
+			    <li><a th:href="@{/ecom/product_category_mgn_page}">
+			        <i class="fas fa-list"></i>
+			        Categories
+			    </a></li>
+			    <li><a th:href="@{/ecom/edit-profile/{adminId}(adminId=${admin.adminId})}">
+			        <i class="fas fa-edit"></i>
+			        Edit Profile
+			    </a></li>
+			    <li><a th:href="@{/ecom/deli/login}">
+			        <i class="fas fa-sign-out-alt"></i>
+			        Log out
+			    </a></li>
+			</ul>
+        </div>
+    
+    <form th:action="@{/ecom/add_new_category}" method="get" th:object="${category}" id="add-category-form">
+        <label for="category-name">Category Name</label>
+        <input type="text" id="category-name" th:field="${category.categoryName}" name="category-name" placeholder="Eg. Cosmectis" required>
+        <button type="submit">Add</button>
+    </form>
+   
+   	<div class="categories-container">
+   		<h1>All Categories</h1>
+	    <div th:if="${categories.size() == 0}">
+	        <p>No category added. Create one.</p>
+	    </div>
+	    <div th:each="category : ${categories}" class="category-box">
+            <h6 th:text="${category.categoryName}"></h6>
+            <div class="category-actions">
+                <a class="btn-action btn-edit" th:attr="onclick=|handleEditCategory('${category.categoryId}', '${category.categoryName}')|">
+                    <i class="fas fa-edit"></i>
+                </a>
+                <a class="btn-action btn-delete" th:attr="onclick=|handleDeleteCategory('${category.categoryId}')|">
+                    <i class="fas fa-trash-alt"></i>
+                </a>
+            </div>
+        </div>
+	</div>
+
+
+	<script>
+        
+        function handleEditCategory(categoryId, currentName) {
+            Swal.fire({
+                title: 'Edit Category',
+                input: 'text',
+                inputValue: currentName, // Pre-fill with current name
+                showCancelButton: true,
+                confirmButtonText: 'Save',
+                cancelButtonText: 'Cancel',
+                inputValidator: (value) => {
+                    if (!value) {
+                        return 'You need to write something!';
+                    }
+                    if (value === currentName) {
+                        return 'Please enter a different name!'; // Prevent submitting the same name
+                    }
+                }
+            }).then((result) => {
+                if (result.isConfirmed) 
+                {
+                    const updatedName = result.value;
+                    window.location.href = `/ecom/update-category?categoryId=${categoryId}&updatedName=${updatedName}`;
+                }
+            });
+        }
+
+        function handleDeleteCategory(categoryId) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Redirect to the delete endpoint with categoryId
+                    window.location.href = `/ecom/delete-category?categoryId=${categoryId}`;
+                }
+            });
+        }
+
+    </script>
+    
+    <script th:if="${error}">
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: '[[${error}]]'
+        });
+    </script>
+</body>
+</html>

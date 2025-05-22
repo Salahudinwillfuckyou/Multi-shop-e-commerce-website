@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Registration | Grab Turtle</title>
+    <link rel="stylesheet" th:href="@{/css/register-style.css}">
+    <style>
+    	.container
+    	{
+    		margin-top: 50px;
+    	}
+    	.image-section {
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .image-section img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .container
+        {
+        	width: 1100px;
+        }
+        textarea 
+        {
+        	margin-right: 20px;
+		    width: 81%;
+		    border: 1px solid #ccc;
+		    resize: none;
+		    background-color: #fff;
+		    transition: border-color 0.3s;
+		}
+		
+		textarea:focus {
+		    outline: none;
+		    border-color: #004aad;
+		    box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.25);
+		}
+    </style>
+    <script>
+        // Function to show an alert message and clear input fields
+        function handleLoginError(message) {
+            if (message) {
+                alert(message);
+                document.getElementById("loginForm").reset();
+            }
+        }
+    </script>
+</head>
+<body th:attr="onload=${errorMessage} != null ? 'handleLoginError(\'' + ${errorMessage} + '\')' : null"> 
+    <div class="container">
+        <div class="image-section">
+        	<img alt="" th:src="@{/Images/customer_images/customer-register.png}">
+        </div>
+        <div class="form-section">
+            <h2>Customer Registration</h2>
+            <form th:action="@{/ecom/user/register-customer}" method="post" enctype="multipart/form-data" th:object="${customer}" onsubmit="validatePasswords(event)">
+                <div class="form-group">
+                    <label for="first-name">First Name</label>
+                    <input type="text" id="first-name" th:field ="${customer.firstName}" required>
+                    <label for="last-name">Last Name</label>
+                    <input type="text" id="last-name" th:field ="${customer.lastName}" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" th:field ="${customer.email}" required>
+                    <label for="phoneNumber">Phone</label>
+                    <input type="tel" id="phoneNumber" th:field ="${customer.phoneNumber}" required>
+                </div>
+                <div class="form-group">
+				    <label for="address">Address</label>
+				    <textarea id="address" th:field="${customer.address}" name="address" rows="3" required></textarea>
+				</div>
+				<div class="form-group">
+					<label for="file">Choose Profile Image</label>
+	                <input type="file" id="file" name="file">
+				</div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" th:field ="${customer.password}" required>
+                    <label for="confirmpassword">Confirm</label>
+                    <input type="password" id="confirmpassword" required>
+                </div>
+                <div class="form-footer">
+				    <div class="checkbox-group">
+				        <input type="checkbox" id="showPassword" onchange="toggleShowPassword()">
+				        <label for="showPassword">Show Passwords</label>
+				    </div>
+				    <div class="login-link">
+				        Already have an account? <a th:href="@{/ecom/user/user-login}">Log In Here</a>
+				    </div>
+				</div>
+                <button type="submit">Register</button>
+            </form>
+        </div>
+    </div>
+    <script>
+	    function validatePasswords(event) {
+	        const password = document.getElementById('password').value;
+	        const confirmPassword = document.getElementById('confirmpassword').value;
+	
+	        if (password !== confirmPassword) {
+	            event.preventDefault();
+	            alert("Passwords do not match. Please try again.");
+	        }
+	    }
+	
+	    function toggleShowPassword() {
+	        const showPassword = document.getElementById('showPassword').checked;
+	        document.getElementById('password').type = showPassword ? 'text' : 'password';
+	        document.getElementById('confirmpassword').type = showPassword ? 'text' : 'password';
+	    }
+    </script>
+</body>
+</html>

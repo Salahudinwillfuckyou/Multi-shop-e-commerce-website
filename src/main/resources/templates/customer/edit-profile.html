@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+    <link rel="stylesheet" th:href="@{/css/home_customer_style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+	 <style>
+	    /* Base Styles */
+	    body {
+	        font-family: 'Arial', sans-serif;
+	        background-color: #f8f9fa;
+	        line-height: 1.6;
+	        color: #333;
+	        margin: 0;
+	        padding: 0;
+	    }
+	
+	    .edit-container {
+	        width: 100%;
+	        padding: 2rem;
+	        background: white;
+	    }
+	
+	    /* Full-width form container */
+	    .form-container {
+	        max-width: 1200px;
+	        margin: 0 auto;
+	    }
+	
+	    h2 {
+	        color: #2c3e50;
+	        margin-bottom: 1.5rem;
+	        font-size: 1.5rem;
+	        border-bottom: 2px solid #eee;
+	        padding-bottom: 0.5rem;
+	    }
+	
+	    /* Grid layout for two columns */
+	    .form-grid {
+	        display: grid;
+	        grid-template-columns: 1fr 1fr;
+	        gap: 1.5rem;
+	    }
+	
+	    .form-group {
+	        margin-bottom: 1.5rem;
+	    }
+	
+	    label {
+	        display: block;
+	        margin-bottom: 0.5rem;
+	        font-weight: 600;
+	        color: #4a5568;
+	    }
+	
+	    input[type="text"],
+	    input[type="email"],
+	    input[type="tel"],
+	    input[type="password"] {
+	        width: 90%;
+	        padding: 0.75rem;
+	        border: 1px solid #e2e8f0;
+	        border-radius: 6px;
+	        font-size: 1rem;
+	        transition: border-color 0.3s ease;
+	    }
+	
+	    /* Profile Image Adjustments */
+	    .image-section img {
+	        width: 80px;
+	        height: 80px;
+	        border-radius: 50%;
+	        object-fit: cover;
+	        border: 2px solid #e2e8f0;
+	        margin-bottom: 1rem;
+	    }
+	
+	    .file input {
+	        display: none;
+	    }
+	
+	    .file {
+	        display: inline-block;
+	        padding: 0.5rem 1rem;
+	        background-color: #4299e1;
+	        color: white;
+	        border-radius: 5px;
+	        cursor: pointer;
+	        transition: background-color 0.3s ease;
+	    }
+	
+	    /* Password Section Grid */
+	    .password-section .form-grid {
+	        grid-template-columns: 1fr 1fr;
+	        gap: 1.5rem;
+	    }
+	
+	    .btn-save {
+	        width: 200px;
+	        padding: 1rem;
+	        background-color: #48bb78;
+	        color: white;
+	        border: none;
+	        border-radius: 6px;
+	        font-size: 1rem;
+	        font-weight: 600;
+	        cursor: pointer;
+	        transition: background-color 0.3s ease;
+	        margin-top: 1.5rem;
+	    }
+	
+	    /* Responsive Design */
+	    @media (max-width: 768px) {
+	        .form-grid,
+	        .password-section .form-grid {
+	            grid-template-columns: 1fr;
+	        }
+	
+	        .edit-container {
+	            padding: 1rem;
+	        }
+	
+	        .btn-save {
+	            width: 100%;
+	        }
+	    }
+	</style>
+</head>
+<body>
+    <header>
+        <h1>Khine Myanmar</h1>
+	 		<div class="menu-section">
+            <div class="button-section">
+                <div class="profile-view">
+                    <img th:src="@{${customerTmp.profileImage}}" alt="Profile">
+                    <p style="color: black;"><span th:text="${customerTmp.firstName} + ' ' + ${customerTmp.lastName}"></span></p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Secondary Header for Navigation -->
+    <div class="nav-header">
+        <nav>
+            <a th:href="@{/ecom/user/home}">Home</a>
+            <a th:href="@{/ecom/user/view-shops}">Shops</a>
+            <a th:href="@{/ecom/user/view-products}">Products</a>
+            <a th:href="@{/ecom/user/order-history}">Your Orders</a>
+            <a th:href="@{/ecom/user/edit-profile}">Edit Profile</a>
+        </nav>
+    </div>
+
+    <div class="edit-container">
+        <form th:action="@{/ecom/update-customer/{customerId}(customerId=${customer.customerId})}" method="post" enctype="multipart/form-data" th:object="${customer}">
+            <div class="form-container">
+			    <!-- Profile Information Section -->
+			    <div class="form-section">
+			        <h2>Profile Information</h2>
+			        <div class="image-section">
+			            <img th:src="@{${customerTmp.profileImage}}" id="customerImagePreview" alt="Customer Image">
+			            <label class="file">
+			                <input type="file" name="file" id="file" accept="image/*" onchange="previewImage(this)">
+			                Change Photo
+			            </label>
+			        </div>
+			
+			        <div class="form-grid">
+			            <div class="form-group">
+			                <label for="first-name">First Name</label>
+			                <input type="text" id="first-name" th:field="${customerTmp.firstName}" required>
+			            </div>
+			            
+			            <div class="form-group">
+			                <label for="last-name">Last Name</label>
+			                <input type="text" id="last-name" th:field="${customerTmp.lastName}" required>
+			            </div>
+			
+			            <div class="form-group">
+			                <label for="email">Email</label>
+			                <input type="email" id="email" th:field="${customerTmp.email}" required>
+			            </div>
+			
+			            <div class="form-group">
+			                <label for="phone">Phone Number</label>
+			                <input type="tel" id="phone" th:field="${customerTmp.phoneNumber}" required>
+			            </div>
+			
+			            <div class="form-group full-width">
+						    <label for="address">Address</label>
+						    <input type="text" id="address" th:field="${customerTmp.address}" required>
+						</div>
+			        </div>
+			    </div>
+			
+			    <!-- Password Section -->
+			    <div class="password-section">
+			        <h2>Change Password</h2>
+			        <div class="form-grid">
+			            <div class="form-group">
+			                <label for="current-password">Current Password</label>
+			                <input type="password" id="current-password" name="currentPassword">
+			            </div>
+			            <div class="form-group">
+			                <label for="new-password">New Password</label>
+			                <input type="password" id="new-password" name="newPassword">
+			            </div>
+			            <div class="form-group">
+			                <label for="confirm-password">Confirm Password</label>
+			                <input type="password" id="confirm-password" name="confirmPassword">
+			            </div>
+			        </div>
+			    </div>
+			
+			    <button type="submit" class="btn-save">Save Changes</button>
+			</div>
+        </form>
+    </div>
+
+	<script>
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('customerImagePreview').src = e.target.result;
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+</body>
+</html>

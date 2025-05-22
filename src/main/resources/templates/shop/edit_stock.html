@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop Dashboard | Grab Turtle</title>
+    <link rel="stylesheet" th:href="@{/css/home_admin_style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Added image section styling */
+        .form-container {
+            display: flex;
+            gap: 2rem;
+            align-items: flex-start;
+        }
+
+        .image-section {
+            flex: 0 0 250px;
+            text-align: center;
+        }
+
+        .product-image {
+            width: 300px;
+            height: 300px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 2px solid #e0e0e0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .edit-container {
+            background: white;
+            padding: 40px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-left: 250px;
+            max-width: 800px;
+        }
+
+        /* Existing styles remain the same */
+        .edit-header {
+            margin-bottom: 30px;
+        }
+
+        .edit-header h3 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .edit-header h6 {
+            font-size: 16px;
+            color: #666;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .stock-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f8f9fa;
+            color: #666;
+        }
+
+        .quantity-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .quantity-input:focus {
+            outline: none;
+            border-color: #004aad;
+            box-shadow: 0 0 0 2px rgba(0, 74, 173, 0.2);
+        }
+
+        .save-button {
+            width: 100%;
+            padding: 12px;
+            background-color: #004aad;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            font-size: 16px;
+        }
+
+        .save-button:hover {
+            background-color: #0080ff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        	<a th:href="@{/ecom/shop/index}"><h2>Khine Myanmar</h2></a>
+            <h2>Shop Administrator</h2>
+            <ul class="nav-menu">
+			    <li><a th:href="@{/ecom/shop/index}" class="active">
+			        <i class="fas fa-tachometer-alt"></i>
+			        Dashboard
+			    </a></li>
+			    <li><a th:href="@{/ecom/shop/view-orders}">
+			        <i class="fas fa-shopping-cart"></i>
+			        Orders
+			    </a></li>
+			    <li><a th:href="@{/ecom/shop/deliveries}">
+			        <i class="fas fa-truck"></i>
+			        Delivery Agents
+			    </a></li>
+			    <li><a th:href="@{/ecom/shop/products}">
+			        <i class="fas fa-box"></i>
+			        Products
+			    </a></li>
+			    <li><a th:href="@{/ecom/shop/edit-shop/{shopId}(shopId=${shop.shopId})}">
+			        <i class="fas fa-edit"></i>
+			        Edit Shop Profile
+			    </a></li>
+			    <li><a th:href="@{/ecom/shop/login}">
+			        <i class="fas fa-sign-out-alt"></i>
+			        Log out
+			    </a></li>
+			</ul>
+        </div>
+    
+<div class="edit-container">
+        <div class="form-container">
+            <!-- Image Section -->
+            <div class="image-section">
+                <img th:src="${productShop.product.productImage}" alt="Product Image" class="product-image">
+                <div class="product-name" style="margin-top: 15px; font-weight: 500; color: #333;">
+                    <span th:text="${productShop.product.productName}"></span>
+                </div>
+            </div>
+
+            <!-- Form Section -->
+            <div class="form-fields">
+                <div class="edit-header">
+                    <h3>Stock Management</h3>
+                    <h6>Update Inventory Quantity</h6>
+                </div>
+                
+                <div class="form-group">
+                    <label>Current Stock Quantity</label>
+                    <input type="number" th:value="${productShop.stockQuantity}" 
+                           class="stock-input" disabled>
+                </div>
+
+                <form th:action="@{/ecom/shop/edit-stock/{productId}(productId=${productShop.product.productId})}" 
+                      method="get">
+                    <div class="form-group">
+                        <label for="quantity">Add Quantity</label>
+                        <input type="number" id="quantity" name="quantity" 
+                               placeholder="Enter quantity to add" required class="quantity-input">
+                    </div>
+                    
+                    <button type="submit" class="save-button">Update Stock</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    
+        function toggleDropdown(event, dropdownId) {
+            const dropdowns = document.querySelectorAll('.dropdown-content');
+            dropdowns.forEach(dropdown => {
+                if (dropdown.id !== dropdownId) {
+                    dropdown.style.display = 'none';
+                }
+            });
+
+            const dropdown = document.getElementById(dropdownId);
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Close dropdowns if clicked outside
+        window.onclick = function(event) {
+            if (!event.target.closest('.menu')) {
+                const dropdowns = document.querySelectorAll('.dropdown-content');
+                dropdowns.forEach(dropdown => {
+                    dropdown.style.display = 'none';
+                });
+            }
+        }
+
+        function toggleDropdown(event, dropdownId) {
+            const dropdowns = document.querySelectorAll('.dropdown-content');
+            dropdowns.forEach(dropdown => {
+                if (dropdown.id !== dropdownId) {
+                    dropdown.style.display = 'none'; // Close other dropdowns
+                }
+            });
+
+            const dropdown = document.getElementById(dropdownId);
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Close dropdowns if clicked outside
+        window.onclick = function(event) {
+            if (!event.target.closest('.button-section')) {
+                const dropdowns = document.querySelectorAll('.dropdown-content');
+                dropdowns.forEach(dropdown => {
+                    dropdown.style.display = 'none';
+                });
+            }
+        };
+    </script>
+</body>
+</html>

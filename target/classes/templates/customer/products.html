@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+   	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products | Khine Myanmar</title>
+    <link rel="stylesheet" th:href="@{/css/home_customer_style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+		
+        .main-container {
+	        margin-top: 40px;
+	        display: flex;
+	        gap: 30px;
+	        padding: 20px 50px 100px 300px; /* Add left padding for sidebar */
+	    }
+
+        .search {
+            margin: 30px 0;
+            padding: 0 50px;
+        }
+
+        .search div {
+            display: flex;
+            gap: 10px;
+            max-width: 800px;
+        }
+
+        .search input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #004aad;
+            border-radius: 25px;
+            font-size: 16px;
+        }
+
+        .search button {
+            background: #004aad;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .search button:hover {
+            background: #00387d;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+	
+	    /* Responsive adjustments */
+	    @media (max-width: 768px) {
+	        .add-to-cart-btn {
+	            padding: 8px 12px;
+	            font-size: 0.9em;
+	        }
+	        
+	        .add-to-cart-btn i {
+	            font-size: 1em;
+	        }
+	    }
+	    
+	    .product-image {
+		  	width: 100%;
+		  	height: 200px;
+		  	overflow: hidden;
+		  	border-radius: 8px;
+		}
+နိ
+        .product-image img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+	        transition: transform 0.3s ease;
+	    }
+	    
+        .product-details {
+            padding: 15px;
+        }
+
+        .product-details h6 {
+		 	font-size: 1.1rem;
+		 	margin: 0;
+		  	white-space: nowrap;
+		  	overflow: hidden;
+		  	text-overflow: ellipsis;
+		}
+
+        .product-actions {
+        	position: absolute;
+		  	text-align: right;
+		}
+		
+		.product-actions button {
+		  border: none;
+		  background: none;
+		  cursor: pointer;
+		  padding: 5px;
+		  transition: transform 0.2s;
+		}
+		
+		.product-actions button:hover {
+		  transform: scale(1.1);
+		}
+		
+		.category-sidebar {
+		    width: 250px;
+		    position: fixed;
+		   	left: 0;
+			top: 135px; /* Adjust based on header height */
+		    bottom: 0;
+		    padding: 20px 20px; /* Vertical padding only */
+		    background: #f8f9fa;
+		    overflow-y: auto;
+		    z-index: 100;
+		}
+        
+        .category-sidebar h3 {
+            color: #004aad;
+            margin-top: 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #004aad;
+        }
+        
+        .category-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .category-link {
+            padding: 10px 15px;
+            border-radius: 5px;
+            color: #333;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .category-link:hover {
+            background: #e9ecef;
+        }
+
+        .category-link.active {
+            background: #004aad;
+            color: white;
+        }
+		
+		.price {
+		    color: #004aad;
+		    font-weight: bold;
+		    font-size: 1.1em;
+		    margin: 10px 0;
+		}
+		
+		.description {
+		    color: #444;
+		    font-size: 0.95em;
+		    line-height: 1.4;
+		}
+		
+		.products-grid {
+	        flex-grow: 1;
+	        display: grid;
+	        grid-template-columns: repeat(3, 1fr);
+	        gap: 25px;
+	        width: 100%;
+	    }
+
+        /* Product card styling */
+        .product-card 
+        {
+	        background: white;
+	        padding: 15px;
+	       	border: 1px solid #ddd;
+			display: flex;
+			flex-direction: column;
+			gap:10px;
+			box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+			transition: transform 0.2s;
+			border-radius: 8px;
+	    }
+        
+        .product-card:hover {
+            transform: translateY(-3px);
+        }
+		
+		.no-products {
+		    text-align: center;
+		    padding: 50px 20px;
+		}
+		
+		.no-products img {
+		    opacity: 0.8;
+		    margin-bottom: 20px;
+		}
+		
+		.no-products h3 {
+		    color: #004aad;
+		    margin-bottom: 10px;
+		}
+		
+		.no-products p {
+		    color: #666;
+		}
+		
+				/* Enhanced Cart Modal Styles */
+		/* Cart Modal Styles */
+		#cart-modal {
+		    display: none;
+		    position: fixed;
+		    top: 50%;
+		    left: 50%;
+		    transform: translate(-50%, -50%);
+		    width: 90%;
+		    max-width: 500px;
+		    background: #fff;
+		    border-radius: 12px;
+		    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+		    z-index: 1000;
+		    padding: 20px;
+		    overflow: hidden;
+		}
+		
+		#cart-modal.active {
+		    display: block;
+		}
+		
+		/* Modal Header */
+		#cart-modal h3 {
+		    margin: 0 0 20px 0;
+		    font-size: 1.5rem;
+		    color: #004aad;
+		    text-align: center;
+		    padding-bottom: 15px;
+		    border-bottom: 1px solid #e0e0e0;
+		}
+		
+		/* Cart Items Table */
+		#cart-modal table {
+		    width: 100%;
+		    border-collapse: collapse;
+		    margin-bottom: 20px;
+		}
+		
+		#cart-modal th,
+		#cart-modal td {
+		    padding: 12px;
+		    text-align: center;
+		    border-bottom: 1px solid #e0e0e0;
+		}
+		
+		#cart-modal th {
+		    background: #f8f8f8;
+		    color: #004aad;
+		    font-weight: 600;
+		}
+		
+		#cart-modal td {
+		    color: #333;
+		}
+		
+		/* Remove Button */
+		#cart-modal .remove {
+		    background: none;
+		    border: none;
+		    color: #ff4444;
+		    cursor: pointer;
+		    font-size: 1.2rem;
+		    transition: color 0.3s;
+		}
+		
+		#cart-modal .remove:hover {
+		    color: #cc0000;
+		}
+		
+		/* Quantity Display */
+		#cart-modal .quantity-display {
+		    display: inline-block;
+		    padding: 5px 10px;
+		    border: 1px solid #ddd;
+		    border-radius: 4px;
+		    background: #f8f8f8;
+		    font-size: 0.9rem;
+		}
+		
+		/* Total Row */
+		#cart-modal tr:last-child td {
+		    font-weight: 600;
+		    color: #004aad;
+		    border-bottom: none;
+		}
+		
+		/* Order Button */
+		#cart-modal .order-button {
+		    width: 100%;
+		    background: #004aad;
+		    color: white;
+		    border: none;
+		    padding: 12px;
+		    border-radius: 8px;
+		    font-size: 1.1rem;
+		    cursor: pointer;
+		    display: flex;
+		    align-items: center;
+		    justify-content: center;
+		    gap: 10px;
+		    transition: background 0.3s;
+		}
+		
+		#cart-modal .order-button:hover {
+		    background: #003b8a;
+		}
+		
+		/* Overlay Styles */
+		#overlay {
+		    display: none;
+		    position: fixed;
+		    top: 0;
+		    left: 0;
+		    width: 100%;
+		    height: 100%;
+		    background: rgba(0, 0, 0, 0.5);
+		    z-index: 999;
+		}
+		
+		#overlay.active {
+		    display: block;
+		}
+		
+				/* Modal Styles */
+		.modal {
+		  display: none;
+		  position: fixed;
+		  top: 50%;
+		  left: 50%;
+		  transform: translate(-50%, -50%);
+		  background: #fff;
+		  padding: 30px;
+		  border-radius: 8px;
+		  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+		  z-index: 1000;
+		  width: 90%;
+		  max-width: 400px;
+		}
+		
+		.modal.active {
+		  display: block;
+		}
+		
+		.modal h3 {
+		  margin-top: 0;
+		  font-size: 1.5rem;
+		  color: #004aad;
+		}
+		
+		.modal p {
+		  font-size: 0.9rem;
+		  color: #666;
+		}
+		
+		.quantity-controls {
+		  display: flex;
+		  align-items: center;
+		  gap: 10px;
+		  margin: 20px 0;
+		}
+		
+		.quantity-btn {
+		  padding: 5px 15px;
+		  border: 1px solid #004aad;
+		  background: #fff;
+		  color: #004aad;
+		  cursor: pointer;
+		  border-radius: 4px;
+		  transition: background 0.3s, color 0.3s;
+		}
+		
+		.quantity-btn:disabled {
+		  border-color: #ccc;
+		  color: #ccc;
+		  cursor: not-allowed;
+		}
+		
+		#quantity-input {
+		  width: 60px;
+		  text-align: center;
+		  border: 1px solid #ddd;
+		  padding: 5px;
+		  border-radius: 4px;
+		}
+		
+		/* Modal Buttons */
+		.modal-buttons {
+		  display: flex;
+		  justify-content: flex-end;
+		  gap: 10px;
+		}
+		
+		.modal-buttons button {
+		  padding: 10px 20px;
+		  border: none;
+		  border-radius: 4px;
+		  cursor: pointer;
+		  transition: background 0.3s;
+		}
+		
+		.modal-buttons .confirm {
+		  background: #004aad;
+		  color: #fff;
+		}
+		
+		.modal-buttons .confirm:hover {
+		  background: #0080ff;
+		}
+		
+		.modal-buttons .cancel {
+		  background: #ddd;
+		  color: #333;
+		}
+		
+		.modal-buttons .cancel:hover {
+		  background: #bbb;
+		}
+		
+		/* Overlay Styles */
+		.overlay {
+		  display: none;
+		  position: fixed;
+		  top: 0;
+		  left: 0;
+		  width: 100%;
+		  height: 100%;
+		  background: rgba(0, 0, 0, 0.5);
+		  z-index: 999;
+		}
+		
+		.overlay.active {
+		  display: block;
+		}
+
+        /* Responsive adjustments */
+        @media (max-width: 1200px) {
+	        .main-container {
+	            padding-left: 260px;
+	        }
+	    }
+	
+	    @media (max-width: 992px) {
+	        .main-container {
+	            flex-direction: column;
+	            padding: 20px;
+	        }
+	
+	        .category-sidebar {
+	            position: static;
+	            width: 100%;
+	            top: auto;
+	            margin-top: 20px;
+	        }
+	
+	        .products-grid {
+	            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+	        }
+	    }
+	
+	    @media (max-width: 576px) {
+	        .main-container {
+	            padding: 10px;
+	        }
+	
+	        .search {
+	            padding: 0 10px;
+	        }
+	
+	        .products-grid {
+	            grid-template-columns: 1fr;
+	        }
+	    }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Khine Myanmar</h1>
+	 		<div class="menu-section">
+            <div class="button-section">
+                <div class="profile-view">
+                	<button id="cart-button"><i class="fas fa-shopping-cart"></i> Cart</button>
+                    <img th:src="@{${customer.profileImage}}" alt="Profile">
+                    <p style="color: black;"><span th:text="${customer.firstName} + ' ' + ${customer.lastName}"></span></p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Secondary Header -->
+    <div class="nav-header">
+        <nav>
+            <a th:href="@{/ecom/user/home}">Home</a>
+            <a th:href="@{/ecom/user/view-shops}">Shops</a>
+            <a th:href="@{/ecom/user/view-products}">Products</a>
+            <a th:href="@{/ecom/user/order-history}">Your Orders</a>
+            <a th:href="@{/ecom/user/edit-profile}">Edit Profile</a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Search Bar -->
+        <div class="search" style="margin: 30px 50px 0">
+            <form th:action="@{/ecom/user/view-products}" method="get">
+                <div style="display: flex; gap: 10px; max-width: 800px;">
+                    <input type="text" name="searchTerm" 
+                           th:value="${param.searchTerm}" 
+                           placeholder="Search products..."
+                           style="flex: 1; padding: 12px; border: 2px solid #004aad; border-radius: 25px;">
+                    <button type="submit" style="padding: 12px 25px; background: #004aad; color: white; border: none; border-radius: 25px;">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                <input type="hidden" name="categoryId" th:value="${param.categoryId}">
+            </form>
+        </div>
+
+        <div class="main-container">
+            <!-- Category Sidebar -->
+            <aside class="category-sidebar">
+                <h3>Categories</h3>
+                <nav class="category-list">
+                    <a th:href="@{/ecom/user/view-products(searchTerm=${param.searchTerm})}"
+                       class="category-link"
+                       th:classappend="${!param.containsKey('categoryId')} ? 'active'">
+                        All Categories
+                    </a>
+                    <a th:each="category : ${categories}"
+                       th:href="@{/ecom/user/view-products(categoryId=${category.categoryId}, searchTerm=${param.searchTerm})}"
+                       class="category-link"
+                       th:classappend="${(param.categoryId != null and param.categoryId == category.categoryId)} ? 'active'"
+                       th:text="${category.categoryName}">
+                    </a>
+                </nav>
+            </aside>
+            
+            <!-- Search and Filters Form -->
+            <div class="right-panel">
+			<div class="search" style="margin: 0px -50px 20px">
+			    <form th:action="@{/ecom/user/view-products}" method="get">
+			        <div style="display: flex; gap: 10px; max-width: 800px; flex-wrap: wrap;">
+			            <!-- Search Input -->
+			            <input type="text" name="searchTerm" 
+			                   th:value="${param.searchTerm}" 
+			                   placeholder="Search products..."
+			                   style="flex: 1; padding: 12px; border: 2px solid #004aad; border-radius: 5px;">
+			            
+			            <!-- Submit Button -->
+			            <button type="submit" style="padding: 12px 25px; background: #004aad; color: white; border: none; border-radius: 5px;">
+			                <i class="fas fa-search"></i>
+			            </button>
+			        </div>
+			        <!-- Hidden Category ID -->
+			        <input type="hidden" name="categoryId" th:value="${param.categoryId}">
+			    </form>
+			</div>
+
+            <!-- Products Grid -->
+            <div class="products-grid">
+                <div th:if="${#lists.isEmpty(products)}" class="no-products">
+                    <h3>No products found !</h3>
+                    <p>Try adjusting your search or filters.</p>
+                </div>
+                
+                <div th:each="product : ${products}" class="product-card" th:if="${product != null}">
+                    <div class="product-image">
+                        <img th:src="@{${product.productImage}}" alt="Product Image" style="width: 100%; height: 200px; object-fit: cover;">
+                    </div>
+                    
+                    <div class="product-details">
+			          	<h6><span th:text="${product.productName}"></span></h6>
+			            <p><span th:text="${product.category.categoryName}"></span></p>
+			            <b><span style=" color: #004aad;" th:text="${#numbers.formatDecimal(product.unitPrice, 1, 'COMMA', 0, 'POINT')} + ' MMK'"></span> </b>
+			            <p><span th:text="${product.description}"></span></p>
+			        </div>
+			        <div class="product-actions" th:with="tmp=${@productShopService.findProductShopByProductId(product.productId)}">
+						<form th:action="@{/ecom/user/add-to-cart}" method="post">
+							<input type="hidden" name="productId" th:value="${product.productId}">
+							<input type="hidden" name="quantity" value="1">
+							<button type="button" 
+							        th:data-product-name="${product.productName}"
+							        th:data-category="${product.category.categoryName}"
+							        th:data-stock="${tmp.get().stockQuantity}"
+							        th:data-product-id="${product.productId}"
+							        th:data-unit-price="${product.unitPrice}"
+							        onclick="handleProductClick(this)">
+							    <img th:src="@{/Images/add-to-cart.svg}">
+							</button>
+						</form>
+					</div>
+                </div>
+            </div>
+            </div>
+        </div>
+        
+        <div class="modal" id="cart-modal">
+		    <h3>🛒 Your Cart</h3>
+		    <div id="cart-items">
+		        <table style="border: none; border-collapse: collapse;">
+		            <thead>
+		                <tr>
+		                    <th></th>
+		                    <th>Name</th>
+		                    <th>Quantity</th>
+		                    <th>Sub Total</th>
+		                </tr>
+		            </thead>
+		            <tbody>
+		                <tr th:each="item : ${cart?.cartItems}">
+		                    <td>
+		                        <form th:action="@{/ecom/user/remove-from-cart}" method="post">
+		                            <input type="hidden" name="productId" th:value="${item.value.product.productId}">
+		                            <button type="submit" class="remove">
+		                                <i class="fa fa-xmark"></i>
+		                            </button>
+		                        </form>
+		                    </td>
+		                    <td th:text="${item.value.product.productName}"></td>
+		                    <td>
+							    <form th:action="@{/ecom/user/update-quantity}" method="post" 
+							          onsubmit="return updateQuantity(this)">
+							        <input type="hidden" name="productId" th:value="${item.value.product.productId}">
+							        <span class="quantity-display" th:text="${item.value.quantity}"></span>
+							    </form>
+							</td>
+		                    <td th:text="${#numbers.formatDecimal(item.value.product.unitPrice * item.value.quantity, 1, 'COMMA', 0, 'POINT')} + ' MMK'"></td>
+		                    
+		                </tr>
+		                <tr>
+		                    <td colspan="3"><strong>Total:</strong></td>
+		                    <td th:text="${#numbers.formatDecimal(cart.totalAmount, 1, 'COMMA', 0, 'POINT')} + ' MMK'"></td>
+		                </tr>
+		            </tbody>
+		        </table>
+		    </div>
+		    <hr>
+		    <form th:action="@{/ecom/user/place-order/{customerId}(customerId=${customer.customerId})}" method="post">
+		        <button type="submit" class="order-button">Check Out <i class="fas fa-arrow-right"></i> </button>
+		    </form>
+		</div>
+		
+		<div class="overlay" id="overlay"></div>
+    </main>
+
+    <div class="modal" id="quantity-modal">
+	    <div class="modal-content">
+	        <h3 id="modal-product-name">Product</h3>
+	        <p id="stock-message" style="color: #666; font-size: 0.9em;"></p>
+	        <div class="quantity-controls">
+	            <button class="quantity-btn minus">-</button>
+	            <input type="number" id="quantity-input" min="1" value="1" readonly>
+	            <button class="quantity-btn plus">+</button>
+	        </div>
+	        <div class="modal-buttons">
+	            <button type="submit" class="confirm" onclick="confirmAddToCart()">Add to Cart</button>
+	            <button class="cancel" onclick="closeModal()">Cancel</button>
+	        </div>
+	    </div>
+	</div>
+	
+    <script>
+        
+	    function handleProductClick(button) {
+	        // Get data from attributes
+	        const productName = button.dataset.productName;
+	        const category = button.dataset.category;
+	        const stock = parseInt(button.dataset.stock);
+	        const productId = parseInt(button.dataset.productId);
+	        const unitPrice = parseFloat(button.dataset.unitPrice);
+	        const form = button.closest('form');
+	        
+	        const isFoodOrDrink = /(food|drink|beverage)/i.test(category);
+	        
+	        if (!isFoodOrDrink && stock <= 0) {
+	            Swal.fire({
+	                icon: 'error',
+	                title: 'Unavailable',
+	                text: 'This product is currently out of stock',
+	                timer: 3000,
+	                showConfirmButton: false
+	            });
+	            return; // Exit function early
+	        }
+	
+	        // Call your modal function with the retrieved data
+	        openModal(productName, unitPrice, productId, category, stock, form);
+	    }
+	
+	    let currentProduct = null;
+	    let currentForm = null;
+	    let maxQuantity = Infinity;
+	
+	    function openModal(productName, unitPrice, productId, category, stock, formElement) 
+	    {
+	        currentProduct = { productId, category, stock };
+	        currentForm = formElement;
+	        maxQuantity = (category.toLowerCase() !== 'foods and drink') ? stock : Infinity;
+	        
+	        document.getElementById('modal-product-name').textContent = productName;
+	        document.getElementById('quantity-input').value = 1;
+	        document.getElementById('stock-message').textContent = 
+	            (category.toLowerCase() !== 'foods and drink') 
+	            ? `Available stock: ${stock}` 
+	            : '';
+	        
+	        // Show modal and overlay
+	        document.getElementById('quantity-modal').style.display = 'block';
+	        document.getElementById('overlay').style.display = 'block';
+	    }
+	
+	    function closeModal() {
+	        document.getElementById('quantity-modal').style.display = 'none';
+	        document.getElementById('overlay').style.display = 'none';
+	        currentProduct = null;
+	        currentForm = null;
+	    }
+	
+	    function confirmAddToCart() 
+	    {
+	        const quantity = parseInt(document.getElementById('quantity-input').value);
+	        if (quantity > 0) {
+	            const quantityInput = currentForm.querySelector('input[name="quantity"]');
+	            quantityInput.value = quantity;
+	            currentForm.submit();
+	        }
+	        closeModal();
+	    }
+	
+	    document.addEventListener('click', function(e) 
+	    {
+	        const input = document.getElementById('quantity-input');
+	        let quantity = parseInt(input.value);
+	
+	        if (e.target.classList.contains('plus')) {
+	            if (quantity < maxQuantity) {
+	                input.value = quantity + 1;
+	            }
+	        } else if (e.target.classList.contains('minus')) {
+	            if (quantity > 1) {
+	                input.value = quantity - 1;
+	            }
+	        }
+	        
+	        // Disable plus button if at max quantity
+	        const plusBtn = document.querySelector('.quantity-btn.plus');
+	        if (plusBtn) 
+	        {
+	            plusBtn.disabled = parseInt(input.value) >= maxQuantity;
+	        }
+	    });
+	    
+	    document.getElementById('cart-button').addEventListener('click', function(e) {
+	        e.preventDefault();
+	        document.getElementById('cart-modal').classList.add('active');
+	        document.getElementById('overlay').classList.add('active');
+	      });
+	
+	      // Function to close the cart modal
+	      function closeCartModal() {
+	        document.getElementById('cart-modal').classList.remove('active');
+	        document.getElementById('overlay').classList.remove('active');
+	      }
+	
+	      // Also close the modal if user clicks on the overlay
+	      document.getElementById('overlay').addEventListener('click', closeCartModal);
+	</script>
+	
+	<script th:if="${success}">
+	    Swal.fire({
+	        icon: 'success',
+	        title: 'Success!',
+	        text: '[[${success}]]',
+	        timer: 3000,
+	        showConfirmButton: false
+	    });
+	</script>
+	
+	<script th:if="${error}">
+	    Swal.fire({
+	        icon: 'error',
+	        title: 'Error!',
+	        text: '[[${error}]]',
+	        timer: 3000,
+	        showConfirmButton: false
+	    });
+	</script>
+</body>
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products | Shop</title>
+    <link rel="stylesheet" th:href="@{/css/home_admin_style.css}">
+    <link rel="stylesheet" th:href="@{/css/product_mng_style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+   	<style>
+   		.product-details h3
+		{
+			white-space: nowrap; text-overflow: ellipsis; overflow: hidden; max-width: 200px;
+		}
+		
+		.filter-controls {
+		    display: flex;
+		    gap: 10px;
+		    margin-top: 20px;
+		    margin-bottom: 20px;
+		    align-items: center;
+		}
+		
+		.search-form {
+		    display: flex;
+		    gap: 10px;
+		    flex-grow: 1;
+		}
+		
+		.search-form input, .search-form select {
+		    padding: 8px;
+		    border: 1px solid #ddd;
+		}
+		
+		.search-form button {
+		    background: #004aad;
+		    color: white;
+		    border: none;
+		    padding: 8px 15px;
+		    cursor: pointer;
+		}
+		
+		.btn-add {
+		    background: #004aad;
+		    color: white;
+		    padding: 8px 15px;
+		    text-decoration: none;
+		    white-space: nowrap;
+		}
+   	</style>
+</head>
+<body>
+    
+    <div class="sidebar">
+        	<a th:href="@{/ecom/shop/index}"><h2>Khine Myanmar</h2></a>
+            <h2>Shop Administrator</h2>
+            <ul class="nav-menu">
+			    <li><a th:href="@{/ecom/shop/index}" class="active">
+			        <i class="fas fa-tachometer-alt"></i>
+			        Dashboard
+			    </a></li>
+			    <li><a th:href="@{/ecom/shop/view-orders}">
+			        <i class="fas fa-shopping-cart"></i>
+			        Orders
+			    </a></li>
+			    <li><a th:href="@{/ecom/shop/deliveries}">
+			        <i class="fas fa-truck"></i>
+			        Delivery Agents
+			    </a></li>
+			    <li><a th:href="@{/ecom/shop/products}">
+			        <i class="fas fa-box"></i>
+			        Products
+			    </a></li>
+			    <li><a th:href="@{/ecom/shop/edit-shop/{shopId}(shopId=${shop.shopId})}">
+			        <i class="fas fa-edit"></i>
+			        Edit Shop Profile
+			    </a></li>
+			    <li><a th:href="@{/ecom/shop/login}">
+			        <i class="fas fa-sign-out-alt"></i>
+			        Log out
+			    </a></li>
+			</ul>
+        </div>
+	
+	<div class="table-container">
+	    <div>
+		    <div class="filter-controls">
+	            <form class="search-form" th:action="@{/ecom/shop/search-product}" method="get">
+	                <input type="text" name="query" placeholder="Search products..." th:value="${query}">
+	                
+					<select name="categoryId" onchange="this.form.submit()">
+					    <option value="">All Categories</option>
+					    <option th:each="category : ${allCategories}" 
+					            th:value="${category.categoryId}"
+					            th:text="${category.categoryName}"
+					            th:selected="${selectedCategoryId != null} ? 
+					                          ${selectedCategoryId == category.categoryId} : 
+					                          false">
+					    </option>
+					</select>
+	                
+	                <button type="submit"><i class="fas fa-search"></i> Search</button>
+	            </form>
+	            
+	            <a th:href="@{/ecom/shop/products}" class="btn-add">
+	                <i class="fas fa-refresh"></i> Refresh
+	            </a>
+	            <a th:href="@{/ecom/shop/product-register}" class="btn-add">
+	                <i class="fas fa-add"></i> New Product
+	            </a>
+	        </div>
+		
+		    <!-- Added product-grid div -->
+		    <div class="product-grid">
+		        <div th:each="product : ${products}" class="product-card">
+		            <!-- Product Image -->
+		            <div class="product-image">
+		                <img th:src="@{${product.productImage}}" alt="Product Image">
+		            </div>
+		
+		            <!-- Product Details -->
+		            <div class="product-details">
+		                <h3><span th:text="${product.productName}"></span></h3>
+		                <p><span th:text="${product.category.categoryName}"></span></p>
+		                <p><span th:text="${#numbers.formatDecimal(product.unitPrice, 1, 'COMMA', 2, 'POINT')} + ' MMK'"></span></p>
+		            </div>
+		
+		            <!-- Action Buttons -->
+		            <div class="product-actions">
+						<button class="btn edit-btn" 
+						        th:onclick="'window.location.href=\'' + @{/ecom/shop/product-edit/{id}(id=${product.productId})} + '\''">
+						    <i class="fas fa-edit"></i>
+						</button>
+		                <button class="btn delete-btn" th:data-product-id="${product.productId}">
+						    <i class="fas fa-trash-alt"></i>
+						</button>
+		                <form th:action="@{/ecom/shop/stock-edit/{productId}(productId=${product.productId})}" method="get">
+		                    <button type="submit" class="btn stock-btn">Edit Stock</button>
+		                </form>
+		            </div>
+		        </div>
+		    </div> <!-- Closing product-grid div -->
+		</div>
+
+	</div>
+
+    <script>
+    
+        function toggleDropdown(event, dropdownId) {
+            const dropdowns = document.querySelectorAll('.dropdown-content');
+            dropdowns.forEach(dropdown => {
+                if (dropdown.id !== dropdownId) {
+                    dropdown.style.display = 'none';
+                }
+            });
+
+            const dropdown = document.getElementById(dropdownId);
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Close dropdowns if clicked outside
+        window.onclick = function(event) {
+            if (!event.target.closest('.menu')) {
+                const dropdowns = document.querySelectorAll('.dropdown-content');
+                dropdowns.forEach(dropdown => {
+                    dropdown.style.display = 'none';
+                });
+            }
+        }
+
+        function toggleDropdown(event, dropdownId) {
+            const dropdowns = document.querySelectorAll('.dropdown-content');
+            dropdowns.forEach(dropdown => {
+                if (dropdown.id !== dropdownId) {
+                    dropdown.style.display = 'none'; // Close other dropdowns
+                }
+            });
+
+            const dropdown = document.getElementById(dropdownId);
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Close dropdowns if clicked outside
+        window.onclick = function(event) {
+            if (!event.target.closest('.button-section')) {
+                const dropdowns = document.querySelectorAll('.dropdown-content');
+                dropdowns.forEach(dropdown => {
+                    dropdown.style.display = 'none';
+                });
+            }
+        };
+        
+        document.addEventListener('DOMContentLoaded', function () {
+            // Attach event listeners to all delete buttons
+            const deleteButtons = document.querySelectorAll('.delete-btn');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    // Get the product ID from the data attribute
+                    const productId = this.getAttribute('data-product-id');
+
+                    // Show SweetAlert2 confirmation dialog
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: 'You are about to delete this product. This action cannot be undone!',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, delete it!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Redirect to the deletion endpoint
+                            window.location.href = `/ecom/shop/delete-product/${productId}`;
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+    
+    <script th:if="${error}">
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: '[[${error}]]'
+        });
+    </script>
+</body>
+</html>

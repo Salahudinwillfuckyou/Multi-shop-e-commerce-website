@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Shop | Delivery</title>
+    <link rel="stylesheet" th:href="@{/css/home_admin_style.css}">
+    <link rel="stylesheet" th:href="@{/css/edit-style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+		/* Add these styles to your CSS */
+		.button {
+		    display: inline-block;
+		    padding: 10px 20px;
+		    border-radius: 5px;
+		    text-decoration: none;
+		    font-weight: 500;
+		    transition: all 0.3s ease;
+		    margin: 10px 0;
+		    text-align: center;
+		}
+		
+		.danger-button {
+		    background-color: #dc3545;
+		    color: white;
+		    border: 2px solid #dc3545;
+		}
+		
+		.danger-button:hover {
+		    background-color: #bb2d3b;
+		    border-color: #b02a37;
+		    color: white;
+		}
+	</style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <a th:href="@{/ecom/admin_home}"><h2>Khine Myanmar</h2></a>
+        <h2>Delivery Agenet</h2>
+            <ul class="nav-menu">
+			    <li><a th:href="@{/ecom/deli/index}" class="active">
+			        <i class="fas fa-tachometer-alt"></i>
+			        Dashboard
+			    </a></li>
+			    <li><a th:href="@{/ecom/deli/pendings}">
+			        <i class="fas fa-clock"></i>
+			        Pending Deliveries
+			    </a></li>
+			    <li><a th:href="@{/ecom/deli/transits}">
+			        <i class="fas fa-truck"></i>
+			        In Transit Deliveries
+			    </a></li>
+			    <li><a th:href="@{/ecom/deli/delivered-orders}">
+			        <i class="fas fa-check-circle"></i>
+			        Completed Deliveries
+			    </a></li>
+			    <li><a th:href="@{/ecom/deli/view-shop/{deliId}(deliId=${deli.shop.shopId})}">
+			        <i class="fas fa-store"></i>
+			        Your Shop
+			    </a></li>
+			    <li><a th:href="@{/ecom/deli/edit-profile}">
+			        <i class="fas fa-edit"></i>
+			        Edit Profile
+			    </a></li>
+			    <li><a th:href="@{/ecom/deli/login}">
+			        <i class="fas fa-sign-out-alt"></i>
+			        Logout
+			    </a></li>
+			</ul>
+    </div>
+
+    <div class="edit-container">
+        <div class="form-container">
+            <div class="image-section">
+                <img th:src="@{${shop.shopImage}}" id="shopImagePreview" alt="Shop Image">
+            </div>
+            
+            <div class="form-fields">
+                <div class="form-group">
+                    <label for="shopName">Shop Name</label>
+                    <input type="text" id="shopName" th:value="${shop.shopName}" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="shopAddress">Address</label>
+                    <textarea id="shopAddress" readonly th:text="${shop.address}"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="shopPhone">Phone Number</label>
+                    <input type="tel" id="shopPhone" th:value="${shop.contactNumber}" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="shopEmail">Email</label>
+                    <input type="email" id="shopEmail" th:value="${shop.ownerEmail}" readonly>
+                </div>
+                
+                <a th:href="@{/ecom/deli/leave-shop}" 
+				   class="button danger-button"
+				   onclick="confirmLeave(event)">
+				   Leave Shop
+				</a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+		function confirmLeave(event) {
+		    event.preventDefault();
+		    const url = event.currentTarget.href;
+		    
+		    Swal.fire({
+		        title: 'Are you sure?',
+		        text: "You won't be able to revert this!",
+		        icon: 'warning',
+		        showCancelButton: true,
+		        confirmButtonColor: '#dc3545',
+		        cancelButtonColor: '#6c757d',
+		        confirmButtonText: 'Yes, leave shop!'
+		    }).then((result) => {
+		        if (result.isConfirmed) {
+		            window.location.href = url;
+		        }
+		    });
+		}
+	</script>
+</body>
+</html>

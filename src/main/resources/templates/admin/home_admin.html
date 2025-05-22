@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Grab Turtle</title>
+    <link rel="stylesheet" th:href="@{/css/home_admin_style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+    	.metrics
+    	{
+    		margin-left: 250px;
+    	}
+    	.header
+    	{
+    		margin-left: 250px;
+    	}
+    	.charts-container
+    	{
+    		margin-left: 250px;
+    	}
+    	
+    	.status-badge 
+		{
+           	border: 1px solid #ddd;
+            max-width: 80px;
+            text-align: center;
+            padding: 8px 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .status-pending { background: #ffe066; color: #856404; }
+        .status-in-transit { background: #6c757d; color: white; }
+        .status-delivered { background: #28a745; color: white; }
+
+	</style>
+</head>
+<body>
+    <div class="sidebar">
+        	<a th:href="@{/ecom/admin_home}"><h2>Khine Myanmar</h2></a>
+            <h2>Administrator</h2>
+            <ul class="nav-menu">
+			    <li><a th:href="@{/ecom/admin_home}" class="active">
+			        <i class="fas fa-tachometer-alt"></i>
+			        Dashboard
+			    </a></li>
+			    <li><a th:href="@{/ecom/shop_mng_page}">
+			        <i class="fas fa-store"></i>
+			        Shops
+			    </a></li>
+			    <li><a th:href="@{/ecom/delivery_mng_page}">
+			        <i class="fas fa-truck"></i>
+			        Delivery Agents
+			    </a></li>
+			    <li><a th:href="@{/ecom/view-orders}">
+			        <i class="fas fa-shopping-cart"></i>
+			        Orders
+			    </a></li>
+			    <li><a th:href="@{/ecom/customer_mng_page}">
+			        <i class="fas fa-user"></i>
+			        Customers
+			    </a></li>
+			    <li><a th:href="@{/ecom/product_mng_page}">
+			        <i class="fas fa-box"></i>
+			        Products
+			    </a></li>
+			    <li><a th:href="@{/ecom/product_category_mgn_page}">
+			        <i class="fas fa-list"></i>
+			        Categories
+			    </a></li>
+			    <li><a th:href="@{/ecom/edit-profile/{adminId}(adminId=${admin.adminId})}">
+			        <i class="fas fa-edit"></i>
+			        Edit Profile
+			    </a></li>
+			    <li><a th:href="@{/ecom/deli/login}">
+			        <i class="fas fa-sign-out-alt"></i>
+			        Log out
+			    </a></li>
+			</ul>
+        </div>
+    
+    <div class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <h1>Welcome! Admin</h1>
+            </div>
+
+            <!-- Metrics -->
+            <div class="metrics">
+                <div class="metric-card">
+                    <h3>Total Shops</h3>
+                    <p th:text="${shopSize}"></p>
+                </div>
+                <div class="metric-card">
+                    <h3>Total Products</h3>
+                    <p th:text="${productSize}"></p>
+                </div>
+                <div class="metric-card">
+                    <h3>Total Customers</h3>
+                    <p th:text="${customerSize}"></p>
+                </div>
+                <div class="metric-card">
+                    <h3>Total Deli-Agents</h3>
+                    <p th:text="${deliSize}"></p>
+                </div>
+                <div class="metric-card">
+                    <h3>Total Categories</h3>
+                    <p th:text="${categorySize}"></p>
+                </div>
+                <div class="metric-card">
+                    <h3>Total Orders</h3>
+                    <p th:text="${orderSize}"></p>
+                </div>
+            </div>
+            
+            <div class="recent-orders">
+            <h2>Recent Orders</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Example data - replace with Thymeleaf -->
+                    <tr th:each="order : ${recentOrders}">
+                        <td th:text="${order.orderId}"></td>
+                        <td th:text="${order.customer.firstName + ' ' + order.customer.lastName}"></td>
+                        <td th:text="${#temporals.format(order.orderedDate, 'yyyy-MM-dd HH:mm')}"></td>
+                        <td th:text="${#numbers.formatDecimal(order.totalAmount, 1, 'COMMA', 0, 'POINT')} + ' MMK'"></td>
+                        <td>
+                            <span th:classappend="${order.orderStatus.code == 0} ? 'status-pending' 
+					                         : (${order.orderStatus.code == 1} ? 'status-in-transit' 
+					                         : 'status-delivered')"
+					          class="status-badge"
+					          th:text="${#strings.capitalize(#strings.replace(order.orderStatus.name(), '_', ' '))}">
+							</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="charts-container">
+            <div class="chart-card">
+                <h3>Sales by Category</h3>
+                <canvas id="donutChart"></canvas>
+            </div>
+            <div class="chart-card">
+                <h3>Sales Overview</h3>
+                <canvas id="lineChart"></canvas>
+            </div>
+        </div>
+       </div>
+       
+       <script th:inline="javascript">
+			/*<![CDATA[*/
+			document.addEventListener('DOMContentLoaded', function() {
+			    // Line Chart
+			    const lineCtx = document.getElementById('lineChart').getContext('2d');
+			    new Chart(lineCtx, {
+			        type: 'line',
+			        data: {
+			            labels: /*[[${months}]]*/ ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+			            datasets: [{
+			                label: 'Monthly Sales',
+			                data: /*[[${monthlySalesData}]]*/ [65, 59, 80, 81, 56, 55],
+			                fill: false,
+			                borderColor: '#4CAF50',
+			                tension: 0.1
+			            }]
+			        },
+			        options: {
+			            responsive: true,
+			            scales: {
+			                y: {
+			                    beginAtZero: true
+			                }
+			            },
+			            plugins: {
+			                legend: {
+			                    position: 'bottom'
+			                }
+			            }
+			        }
+			    });
+			});
+			/*]]>*/
+			</script>
+    
+    <script th:if="${success}">
+	    Swal.fire({
+	        icon: 'success',
+	        title: 'Success!',
+	        text: '[[${success}]]',
+	        timer: 3000,
+	        showConfirmButton: false
+	    });
+	</script>
+	
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	document.addEventListener('DOMContentLoaded', function() {
+	    const donutCtx = document.getElementById('donutChart').getContext('2d');
+	    new Chart(donutCtx, {
+	        type: 'doughnut',
+	        data: {
+	            labels: /*[[${categoryNames}]]*/ [], // Correct syntax
+	            datasets: [{
+	                label: 'Sales by Category',
+	                data: /*[[${categoryCounts}]]*/ [], // Correct syntax
+	                backgroundColor: [
+	                    '#FF6384',
+	                    '#36A2EB',
+	                    '#FFCE56'
+	                ],
+	                hoverOffset: 4
+	            }]
+	        },
+	        options: {
+	            responsive: true,
+	            plugins: {
+	                legend: {
+	                    position: 'bottom'
+	                }
+	            }
+	        }
+	    });
+	});
+	/*]]>*/
+	</script>
+</body>
+</html>

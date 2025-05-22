@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Summary</title>
+    <link rel="stylesheet" th:href="@{/css/home_customer_style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .order-summary-container {
+	        display: flex;
+	        gap: 30px; /* Add gap between columns */
+	        align-items: flex-start; /* Align columns to top */
+	        max-width: 1200px;
+	        margin: 0 auto;
+	        padding: 20px;
+	        margin-top: 150px;
+	    }
+	    
+	    main.order-summary-container form {
+		    display: flex;
+		    gap: 30px;
+		    width: 100%;
+		}
+	    
+		.left-column { flex: 1; }
+		.right-column { flex: 3; }
+	    
+        .product-image {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+
+        /* Add button styling */
+        .action-buttons {
+	        margin-top: 20px;
+	    }
+	
+	    @media (max-width: 768px) {
+	        .order-summary-container {
+	            flex-direction: column;
+	        }
+	        
+	        .left-column {
+	            position: static;
+	            width: 100%;
+	        }
+	    }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .continue-btn {
+            background-color: #004aad;
+            color: white;
+        }
+
+        .continue-btn:hover {
+            background-color: #003b8a;
+            transform: translateY(-1px);
+        }
+
+        .cancel-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .cancel-btn:hover {
+            background-color: #bb2d3b;
+            transform: translateY(-1px);
+        }
+
+
+        .left-column {
+	        flex: 1;
+	        position: sticky;
+	        border-right: 1px solid #eee;
+  			padding-right: 30px;
+	        top: 20px;
+	    }
+
+        .info-card {
+	        background: white;
+	        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+	        padding: 20px;
+	        margin-bottom: 20px;
+	    }
+
+        .info-card h3 {
+            color: #004aad;
+            margin-top: 0;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 15px;
+        }
+
+        /* Adjust existing styles */
+        .order-details {
+	        background: white;
+	        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+	        padding: 25px;
+	    }
+
+        .order-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .order-table th, 
+	    .order-table td {
+	        padding: 12px 10px;
+	    }
+
+        /* Add info section styling */
+        .info-section {
+            margin-bottom: 25px;
+        }
+
+        .info-label {
+            color: #666;
+            font-size: 0.9em;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+	        display: block;
+	        width: 93%;
+	        padding: 8px 12px;
+	        border: 1px solid #ddd;
+	        background-color: #f8f9fa;
+	        margin-top: 5px;
+	        transition: border-color 0.3s ease;
+	    }
+
+        .icon-text {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .icon-text i {
+            color: #004aad;
+            width: 20px;
+            text-align: center;
+        }
+
+        .order-details {
+            background: white;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        .customer-info {
+		    background-color: #f8f9fa;
+		    padding: 20px;
+		    border-radius: 8px;
+		    margin-bottom: 25px;
+		}
+
+        .order-header {
+            color: #004aad;
+            border-bottom: 2px solid #004aad;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+
+        .order-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        .order-table th {
+            background-color: #f8f9fa;
+            color: #004aad;
+            padding: 15px;
+            text-align: left;
+        }
+
+        .order-table td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .total-section {
+	        padding: 15px;
+	        margin-top: 15px;
+	    }
+
+        .total-label {
+            color: #004aad;
+            font-weight: bold;
+            margin-right: 20px;
+        }
+
+        .total-amount {
+            font-size: 1.5em;
+            color: #333;
+        }
+
+       .order-status {
+		    margin-top: 0;
+		    padding: 6px 12px;
+		}
+		
+		input[type="datetime-local"].info-value {
+		    background: white;
+		    font-family: inherit;
+		    color: #333;
+		    cursor: pointer;
+		}
+		
+		input[type="datetime-local"].info-value::-webkit-calendar-picker-indicator {
+		    filter: invert(0.5);
+		    padding: 4px;
+		    cursor: pointer;
+		}
+        .status-processing {
+            background-color: #ffe066;
+            color: #856404;
+        }
+
+        .status-completed {
+            background-color: #b7e1cd;
+            color: #0f5132;
+        }
+
+        .customer-info {
+            background-color: #f8f9fa;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .info-item {
+		    display: flex;
+		    align-items: center;
+		    gap: 8px;
+		}
+        .info-section div {
+	        margin-bottom: 15px;
+	    }
+
+        .info-label {
+            color: #004aad;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Header -->
+	<header>
+        <h1>Khine Myanmar</h1>
+	 		<div class="menu-section">
+            <div class="button-section">
+                <div class="profile-view">
+                    <img th:src="@{${customer.profileImage}}" alt="Profile">
+                    <p style="color: black;"><span th:text="${customer.firstName} + ' ' + ${customer.lastName}"></span></p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Secondary Header for Navigation -->
+    <div class="nav-header">
+        <nav>
+            <a th:href="@{/ecom/user/home}">Home</a>
+            <a th:href="@{/ecom/user/view-shops}">Shops</a>
+            <a th:href="@{/ecom/user/view-products}">Products</a>
+            <a th:href="@{/ecom/user/order-history}">Your Orders</a>
+            <a th:href="@{/ecom/user/edit-profile}">Edit Profile</a>
+        </nav>
+    </div>
+    
+    <main class="order-summary-container">
+        <form th:action="@{/ecom/user/confirm-order/{shopId}(shopId=${shopId})}" method="post">
+            <!-- Left Column (Customer Info & Due Date) -->
+            <div class="left-column">
+                <div class="info-card">
+                    <h3>Customer Information</h3>
+                    <div class="info-section">
+                        <div>
+                            <div class="info-label">Full Name</div>
+                            <div class="info-value" th:text="${customer.firstName + ' ' + customer.lastName}"></div>
+                        </div>
+                        <div>
+                            <div class="info-label">Phone</div>
+                            <div class="info-value" th:text="${customer.phoneNumber ?: 'Not provided'}"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h3>Delivery Address</h3>
+                    <div class="info-section">
+                        <div>
+                            <div class="info-label">Shipping Address</div>
+                            <div class="info-value" th:text="${customer.address}"></div>
+                        </div>
+                        <div>
+                            <div class="info-label">Due Date</div>
+                            <input type="datetime-local" 
+                                   class="info-value" 
+                                   id="dueDate" 
+                                   name="dueDate"
+                                   required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column (Order Summary) -->
+            <div class="right-column">
+                <div class="order-details">
+                    <h2 class="order-header">Order Check Out</h2>
+                    
+                    <!-- Cart Items Table -->
+                    <table class="order-table">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="item : ${session.cart.cartItems}">
+                                <td>
+                                    <img th:src="@{${item.value.product.productImage}}" 
+                                         alt="Product Image" 
+                                         class="product-image">
+                                </td>
+                                <td th:text="${item.value.product.productName}"></td>
+                                <td th:text="${#numbers.formatDecimal(item.value.product.unitPrice, 1, 'COMMA', 0, 'POINT')} + ' MMK'"></td>
+                                <td th:text="${item.value.quantity}"></td>
+                                <td th:text="${#numbers.formatDecimal(item.value.product.unitPrice * item.value.quantity, 1, 'COMMA', 0, 'POINT')} + ' MMK'"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Grand Total -->
+                    <div class="total-section">
+                        <span class="total-label">Grand Total:</span>
+                        <span class="total-amount" th:text="${#numbers.formatDecimal(session.cart.totalAmount, 1, 'COMMA', 0, 'POINT')} + ' MMK'"></span>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="action-buttons">
+                        <a th:href="@{'/ecom/user/view-shop/' + ${shopId}}" class="btn cancel-btn">
+                            <i class="fas fa-times-circle"></i>
+                            Cancel
+                        </a>
+                        <button type="submit" class="btn continue-btn">
+                            Save & Continue
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </main>
+       
+	</body>
+</html>

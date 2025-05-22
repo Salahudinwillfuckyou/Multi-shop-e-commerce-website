@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Shop Profile</title>
+    <link rel="stylesheet" th:href="@{/css/home_admin_style.css}">
+    <link rel="stylesheet" th:href="@{/css/edit-style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+        <div class="sidebar">
+        	<a th:href="@{/ecom/admin_home}"><h2>Khine Myanmar</h2></a>
+            <h2>Administrator</h2>
+            <ul class="nav-menu">
+			    <li><a th:href="@{/ecom/shop/index}" class="active">
+			        <i class="fas fa-tachometer-alt"></i>
+			        Dashboard
+			    </a></li>
+			    <li><a th:href="@{/ecom/shop/view-orders}">
+			        <i class="fas fa-shopping-cart"></i>
+			        Orders
+			    </a></li>
+			    <li><a th:href="@{/ecom/shop/deliveries}">
+			        <i class="fas fa-truck"></i>
+			        Delivery Agents
+			    </a></li>
+			    <li><a th:href="@{/ecom/shop/products}">
+			        <i class="fas fa-box"></i>
+			        Products
+			    </a></li>
+			    <li><a th:href="@{/ecom/shop/edit-shop/{shopId}(shopId=${shop.shopId})}">
+			        <i class="fas fa-edit"></i>
+			        Edit Shop Profile
+			    </a></li>
+			    <li><a th:href="@{/ecom/shop/login}">
+			        <i class="fas fa-sign-out-alt"></i>
+			        Log out
+			    </a></li>
+			</ul>
+        </div>
+    
+    <div class="edit-container">
+	    <form th:action="@{/ecom/shop/update-shop/{shopId}(shopId=${shopTmp.shopId})}" method="post" enctype="multipart/form-data" th:object="${shop}">
+		    <div class="form-container">
+		    	<div class="image-section">
+	                <img th:src="@{${shopTmp.shopImage}}" id="shopImagePreview" alt="Shop Image">
+	                <label class="file">
+	                    <input type="file" name="file" id="file" accept="image/*" onchange="previewImage(this)">
+	                    Change Photo
+	                </label>
+	            </div>
+	            
+	            <div class="form-fields">
+	            	<div class="form-group">
+	                    <label for="first-name">Shop Name</label>
+	                    <input type="text" id="first-name" th:field="${shopTmp.shopName}" name="first_name" th:placeholder="${shopTmp.shopName}">
+	                </div>
+	                <div class="form-group">
+		            	<label for="email">Owner Email</label>
+		            	<input type="email" id="email" th:field="${shopTmp.ownerEmail}" name="email" th:placeholder="${shopTmp.ownerEmail}">
+				    </div>
+				    <div class="form-group">
+				         <label for="contact">Phone Number</label>
+				         <input type="tel" id="contact" th:field="${shopTmp.contactNumber}" name="contact" th:placeholder="${shopTmp.contactNumber}">
+				    </div>
+				    <div class="form-group">
+				            <label for="address">Shop Address</label>
+				            <textarea id="address" th:field="${shopTmp.address}" name="address" rows="3" th:placeholder="${shopTmp.address}" required></textarea>
+				  	</div>
+				    <div class="form-group">
+				            <label for="description">Description of Shop</label>
+				            <textarea id="description" th:field="${shopTmp.description}" name="description" rows="3" th:placeholder="${shopTmp.description}"></textarea>
+				    </div>
+				    <div class="form-group">
+				            <label for="status">Set Status of Shop</label>
+				            <select id="status" th:field="${shopTmp.status}" name="status" required>
+				                <option value="true">Open</option>
+				                <option value="false">Closed</option>
+				            </select>
+				    </div>
+				    <div class="form-group">
+				            <label for="isMember">Set Member</label>
+				            <select id="isMember" th:field="${shopTmp.member}" name="is" required>
+				                <option value="true">True</option>
+				                <option value="false">False</option>
+				            </select>
+				     </div>
+				     <button type="submit">Save</button>
+	            </div>
+		    </div>
+	    </form>
+	</div>
+
+	<script>
+	function toggleDropdown(event, dropdownId) 
+        {
+            removeRedDot();
+            event.stopPropagation();
+            const dropdowns = document.querySelectorAll('.dropdown-content, .dropdown-noti');
+            dropdowns.forEach(dropdown => {
+                if (dropdown.id !== dropdownId) {
+                    dropdown.classList.remove('show');
+                }
+            });
+            const dropdown = document.getElementById(dropdownId);
+            dropdown.classList.toggle('show');
+        }
+
+        window.onclick = function () {
+            const dropdowns = document.querySelectorAll('.dropdown-content, .dropdown-noti');
+            dropdowns.forEach(dropdown => {
+                dropdown.classList.remove('show');
+            });
+        };
+        
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('shopImagePreview').src = e.target.result;
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,211 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\iNet Courses\\Applied Programming\\multishop\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\iNet Courses\\Applied Programming\\multishop\\src\\main\\java\\com\\multishop\\service\\AdminService.java||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\main\\java\\com\\multishop\\service\\AdminService.java||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\iNet Courses\\Applied Programming\\multishop\\src\\main\\java\\com\\multishop\\repository\\ShopRepository.java||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\main\\java\\com\\multishop\\repository\\ShopRepository.java||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\iNet Courses\\Applied Programming\\multishop\\src\\main\\java\\com\\multishop\\repository\\ProductRepository.java||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\main\\java\\com\\multishop\\repository\\ProductRepository.java||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\iNet Courses\\Applied Programming\\multishop\\src\\main\\java\\com\\multishop\\repository\\NotificationRepository.java||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\main\\java\\com\\multishop\\repository\\NotificationRepository.java||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\iNet Courses\\Applied Programming\\multishop\\src\\main\\java\\com\\multishop\\repository\\DeliRepository.java||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\main\\java\\com\\multishop\\repository\\DeliRepository.java||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\iNet Courses\\Applied Programming\\multishop\\src\\main\\java\\com\\multishop\\repository\\CustomerRepository.java||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\main\\java\\com\\multishop\\repository\\CustomerRepository.java||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\iNet Courses\\Applied Programming\\multishop\\src\\main\\java\\com\\multishop\\repository\\CategoryRepository.java||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\main\\java\\com\\multishop\\repository\\CategoryRepository.java||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\iNet Courses\\Applied Programming\\multishop\\src\\main\\java\\com\\multishop\\repository\\AdminRepository.java||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\main\\java\\com\\multishop\\repository\\AdminRepository.java||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\iNet Courses\\Applied Programming\\multishop\\src\\main\\java\\com\\multishop\\model\\Admin.java||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\main\\java\\com\\multishop\\model\\Admin.java||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 7,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{b1e99781-ab81-11d0-b683-00aa00a3ee26}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{eefa5220-e298-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1:0:{d2f6510a-150a-4f3f-9d7c-8e38622d26f7}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:3:0:{d2f6510a-150a-4f3f-9d7c-8e38622d26f7}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:4:0:{d2f6510a-150a-4f3f-9d7c-8e38622d26f7}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:2:0:{d2f6510a-150a-4f3f-9d7c-8e38622d26f7}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{e1b7d1f8-9b3c-49b1-8f4f-bfc63a88835d}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "AdminService.java",
+              "DocumentMoniker": "D:\\iNet Courses\\Applied Programming\\multishop\\src\\main\\java\\com\\multishop\\service\\AdminService.java",
+              "RelativeDocumentMoniker": "src\\main\\java\\com\\multishop\\service\\AdminService.java",
+              "ToolTip": "D:\\iNet Courses\\Applied Programming\\multishop\\src\\main\\java\\com\\multishop\\service\\AdminService.java",
+              "RelativeToolTip": "src\\main\\java\\com\\multishop\\service\\AdminService.java",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAA8AAAALAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001630|",
+              "WhenOpened": "2025-01-07T09:14:04.967Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ShopRepository.java",
+              "DocumentMoniker": "D:\\iNet Courses\\Applied Programming\\multishop\\src\\main\\java\\com\\multishop\\repository\\ShopRepository.java",
+              "RelativeDocumentMoniker": "src\\main\\java\\com\\multishop\\repository\\ShopRepository.java",
+              "ToolTip": "D:\\iNet Courses\\Applied Programming\\multishop\\src\\main\\java\\com\\multishop\\repository\\ShopRepository.java",
+              "RelativeToolTip": "src\\main\\java\\com\\multishop\\repository\\ShopRepository.java",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001630|",
+              "WhenOpened": "2025-01-07T09:11:44.531Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ProductRepository.java",
+              "DocumentMoniker": "D:\\iNet Courses\\Applied Programming\\multishop\\src\\main\\java\\com\\multishop\\repository\\ProductRepository.java",
+              "RelativeDocumentMoniker": "src\\main\\java\\com\\multishop\\repository\\ProductRepository.java",
+              "ToolTip": "D:\\iNet Courses\\Applied Programming\\multishop\\src\\main\\java\\com\\multishop\\repository\\ProductRepository.java",
+              "RelativeToolTip": "src\\main\\java\\com\\multishop\\repository\\ProductRepository.java",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001630|",
+              "WhenOpened": "2025-01-07T09:10:01.79Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "NotificationRepository.java",
+              "DocumentMoniker": "D:\\iNet Courses\\Applied Programming\\multishop\\src\\main\\java\\com\\multishop\\repository\\NotificationRepository.java",
+              "RelativeDocumentMoniker": "src\\main\\java\\com\\multishop\\repository\\NotificationRepository.java",
+              "ToolTip": "D:\\iNet Courses\\Applied Programming\\multishop\\src\\main\\java\\com\\multishop\\repository\\NotificationRepository.java",
+              "RelativeToolTip": "src\\main\\java\\com\\multishop\\repository\\NotificationRepository.java",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001630|",
+              "WhenOpened": "2025-01-07T09:07:56.319Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "DeliRepository.java",
+              "DocumentMoniker": "D:\\iNet Courses\\Applied Programming\\multishop\\src\\main\\java\\com\\multishop\\repository\\DeliRepository.java",
+              "RelativeDocumentMoniker": "src\\main\\java\\com\\multishop\\repository\\DeliRepository.java",
+              "ToolTip": "D:\\iNet Courses\\Applied Programming\\multishop\\src\\main\\java\\com\\multishop\\repository\\DeliRepository.java",
+              "RelativeToolTip": "src\\main\\java\\com\\multishop\\repository\\DeliRepository.java",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001630|",
+              "WhenOpened": "2025-01-07T09:07:35.909Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "CustomerRepository.java",
+              "DocumentMoniker": "D:\\iNet Courses\\Applied Programming\\multishop\\src\\main\\java\\com\\multishop\\repository\\CustomerRepository.java",
+              "RelativeDocumentMoniker": "src\\main\\java\\com\\multishop\\repository\\CustomerRepository.java",
+              "ToolTip": "D:\\iNet Courses\\Applied Programming\\multishop\\src\\main\\java\\com\\multishop\\repository\\CustomerRepository.java",
+              "RelativeToolTip": "src\\main\\java\\com\\multishop\\repository\\CustomerRepository.java",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001630|",
+              "WhenOpened": "2025-01-07T09:06:46.799Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "CategoryRepository.java",
+              "DocumentMoniker": "D:\\iNet Courses\\Applied Programming\\multishop\\src\\main\\java\\com\\multishop\\repository\\CategoryRepository.java",
+              "RelativeDocumentMoniker": "src\\main\\java\\com\\multishop\\repository\\CategoryRepository.java",
+              "ToolTip": "D:\\iNet Courses\\Applied Programming\\multishop\\src\\main\\java\\com\\multishop\\repository\\CategoryRepository.java",
+              "RelativeToolTip": "src\\main\\java\\com\\multishop\\repository\\CategoryRepository.java",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAxAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001630|",
+              "WhenOpened": "2025-01-07T08:29:15.068Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Admin.java",
+              "DocumentMoniker": "D:\\iNet Courses\\Applied Programming\\multishop\\src\\main\\java\\com\\multishop\\model\\Admin.java",
+              "RelativeDocumentMoniker": "src\\main\\java\\com\\multishop\\model\\Admin.java",
+              "ToolTip": "D:\\iNet Courses\\Applied Programming\\multishop\\src\\main\\java\\com\\multishop\\model\\Admin.java",
+              "RelativeToolTip": "src\\main\\java\\com\\multishop\\model\\Admin.java",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAABAAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001630|",
+              "WhenOpened": "2025-01-07T08:24:22.794Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "AdminRepository.java",
+              "DocumentMoniker": "D:\\iNet Courses\\Applied Programming\\multishop\\src\\main\\java\\com\\multishop\\repository\\AdminRepository.java",
+              "RelativeDocumentMoniker": "src\\main\\java\\com\\multishop\\repository\\AdminRepository.java",
+              "ToolTip": "D:\\iNet Courses\\Applied Programming\\multishop\\src\\main\\java\\com\\multishop\\repository\\AdminRepository.java",
+              "RelativeToolTip": "src\\main\\java\\com\\multishop\\repository\\AdminRepository.java",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAyAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001630|",
+              "WhenOpened": "2025-01-07T08:20:41.265Z",
+              "EditorCaption": ""
+            }
+          ]
+        },
+        {
+          "DockedWidth": 730,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

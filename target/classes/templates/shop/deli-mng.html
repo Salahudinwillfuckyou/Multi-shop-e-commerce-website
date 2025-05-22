@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery Management | Shop</title>
+    <link rel="stylesheet" th:href="@{/css/home_admin_style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+    	.action-buttons {
+		    display: flex;
+		    gap: 10px;
+		    align-items: center;
+		}
+		
+		.action-btn {
+		    background: transparent;
+		    border: none;
+		    cursor: pointer;
+		    padding: 5px;
+		    display: flex;
+		    align-items: center;
+		    justify-content: center;
+		}
+		
+		.verify-edit {
+		    color: #4CAF50; /* Green color for verify/edit */
+		    transition: color 0.3s ease;
+		}
+		
+		.verify-edit:hover {
+		    color: #45a049;
+		}
+		
+		.remove-btn {
+		    color: #f44336; /* Red color for remove */
+		    transition: color 0.3s ease;
+		}
+		
+		.remove-btn:hover {
+		    color: #da190b;
+		}
+		
+		.action-btn i {
+		    font-size: 16px;
+		}
+    </style>
+</head>
+<body>
+        <div class="sidebar">
+        	<a th:href="@{/ecom/shop/index}"><h2>Khine Myanmar</h2></a>
+            <h2>Shop Administrator</h2>
+			<ul class="nav-menu">
+			    <li><a th:href="@{/ecom/shop/index}" class="active">
+			        <i class="fas fa-tachometer-alt"></i>
+			        Dashboard
+			    </a></li>
+			    <li><a th:href="@{/ecom/shop/view-orders}">
+			        <i class="fas fa-shopping-cart"></i>
+			        Orders
+			    </a></li>
+			    <li><a th:href="@{/ecom/shop/deliveries}">
+			        <i class="fas fa-truck"></i>
+			        Delivery Agents
+			    </a></li>
+			    <li><a th:href="@{/ecom/shop/products}">
+			        <i class="fas fa-box"></i>
+			        Products
+			    </a></li>
+			    <li><a th:href="@{/ecom/shop/edit-shop/{shopId}(shopId=${shop.shopId})}">
+			        <i class="fas fa-edit"></i>
+			        Edit Shop Profile
+			    </a></li>
+			    <li><a th:href="@{/ecom/shop/login}">
+			        <i class="fas fa-sign-out-alt"></i>
+			        Log out
+			    </a></li>
+			</ul>
+        </div>
+    
+    <div class="table-container">
+	    <div>
+	        <div class="search-bar">
+			    <form class="search" th:action="@{/ecom/shop/search-deli}" method="get">
+			        <input type="text" name="query" id="searchBox" placeholder="Search..." required>
+			        <button type="submit"><i class="fas fa-search"></i></button>
+			    </form>
+			    <a th:href="@{/ecom/shop/deliveries}" class="btn-add">Refresh <i class="fas fa-refresh"></i></a>
+			    <a th:href="@{/ecom/deli/register}" class="btn-add">New Delivery Agent <i class="fas fa-add"></i></a>
+			</div>
+	        <table id="dataTable">
+	            <thead>
+	                <tr>
+	                    <th>First Name</th>
+	                    <th>Last Name</th>
+	                    <th>Email</th>
+	                    <th>Phone Number</th>
+                        <th>Actions</th>
+	                </tr>
+	            </thead>
+	            <tbody>
+	                <tr th:each="d : ${deliPage.content}">
+	                    <td th:text="${d.firstName}"></td>
+	                    <td th:text="${d.lastName}"></td>
+	                    <td th:text="${d.email}"></td>
+	                    <td th:text="${d.phoneNumber}"></td>
+                        <td>
+						    <div class="action-buttons">
+						        <button class="action-btn verify-edit" th:if="!${d.isMember}" th:onclick="'verifyDelivery(this, ' + ${d.deliveryPersonId} + ')'">
+						            <i class="fas fa-check"></i>
+						        </button>
+						        <a th:href="@{/ecom/shop/deli-edit/{deliId}(deliId=${d.deliveryPersonId})}" class="action-btn verify-edit">
+						            <i class="fas fa-edit"></i>
+						        </a>
+						        <a href="#" class="action-btn remove-btn">
+									<p>Remove</p>
+						        </a>
+						    </div>
+						</td>
+	                </tr>
+	            </tbody>
+	        </table>
+	        
+	        <div class="pagination">
+			    <a th:if="${currentPage > 0}" th:href="@{/ecom/shop_mng_page(page=${currentPage - 1})}" class="page-btn">Previous</a>
+			
+			    <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+			        <a th:href="@{/ecom/shop_mng_page(page=${i})}" 
+			           th:text="${i + 1}" 
+			           th:classappend="${i == currentPage} ? 'active'" 
+			           class="page-btn">
+			        </a>
+			    </span>
+				
+			    <a th:if="${currentPage < totalPages - 1}" th:href="@{/ecom/shop_mng_page(page=${currentPage + 1})}" class="page-btn">Next</a>
+			</div>
+	    </div>
+	</div>
+
+	<script>
+        
+        function verifyDelivery(button, deliveryId) 
+        {
+        	button.style.display = 'none';
+            var endpoint = '/ecom/shop/verify-deli/' + deliveryId;
+            window.location.href = endpoint;
+        }
+    </script>
+</body>
+</html>

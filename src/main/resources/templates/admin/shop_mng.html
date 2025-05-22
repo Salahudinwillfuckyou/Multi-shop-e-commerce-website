@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shops | Admin</title>
+    <link rel="stylesheet" th:href="@{/css/home_admin_style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+    	.badge-open,
+		.badge-closed {
+		    display: inline-block;
+		    padding: 6px 12px;
+		    border-radius: 20px; /* Slightly larger pill shape */
+		    font-size: 14px;
+		    font-weight: 600;
+		    text-align: center;
+		    color: white;
+		    text-transform: uppercase; /* UPPERCASE text for a modern look */
+		    letter-spacing: 0.5px; /* Slight spacing for better readability */
+		    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+		    transition: all 0.3s ease; /* Smooth hover effect */
+		}
+		
+		.badge-open {
+		    background: linear-gradient(135deg, #4caf50, #66bb6a); /* Gradient green */
+		}
+		
+		.badge-closed {
+		    background: linear-gradient(135deg, #f44336, #ef5350); /* Gradient red */
+		}
+		
+		/* Hover effects */
+		.badge-open:hover,
+		.badge-closed:hover {
+		    transform: translateY(-2px); /* Slight lift on hover */
+		    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
+		}
+		
+		/* Optional: Add a subtle animation on page load */
+		@keyframes fadeIn {
+		    from {
+		        opacity: 0;
+		        transform: translateY(10px);
+		    }
+		    to {
+		        opacity: 1;
+		        transform: translateY(0);
+		    }
+		}
+		
+		.badge-open,
+		.badge-closed {
+		    animation: fadeIn 0.5s ease-out; /* Fade-in animation */
+		}
+    </style>
+</head>
+<body>
+        <div class="sidebar">
+        	<a th:href="@{/ecom/admin_home}"><h2>Khine Myanmar</h2></a>
+            <h2>Administrator</h2>
+            <ul class="nav-menu">
+			    			    <li><a th:href="@{/ecom/admin_home}" class="active">
+			        <i class="fas fa-tachometer-alt"></i>
+			        Dashboard
+			    </a></li>
+			    <li><a th:href="@{/ecom/shop_mng_page}">
+			        <i class="fas fa-store"></i>
+			        Shops
+			    </a></li>
+			    <li><a th:href="@{/ecom/delivery_mng_page}">
+			        <i class="fas fa-truck"></i>
+			        Delivery Agents
+			    </a></li>
+			    <li><a th:href="@{/ecom/view-orders}">
+			        <i class="fas fa-shopping-cart"></i>
+			        Orders
+			    </a></li>
+			    <li><a th:href="@{/ecom/customer_mng_page}">
+			        <i class="fas fa-user"></i>
+			        Customers
+			    </a></li>
+			    <li><a th:href="@{/ecom/product_mng_page}">
+			        <i class="fas fa-box"></i>
+			        Products
+			    </a></li>
+			    <li><a th:href="@{/ecom/product_category_mgn_page}">
+			        <i class="fas fa-list"></i>
+			        Categories
+			    </a></li>
+			    <li><a th:href="@{/ecom/edit-profile/{adminId}(adminId=${admin.adminId})}">
+			        <i class="fas fa-edit"></i>
+			        Edit Profile
+			    </a></li>
+			    <li><a th:href="@{/ecom/deli/login}">
+			        <i class="fas fa-sign-out-alt"></i>
+			        Log out
+			    </a></li>
+			</ul>
+        </div>
+    
+    <div class="table-container">
+	    <div>
+	        <div class="search-bar">
+			    <form class="search" th:action="@{/ecom/admin/search-shops}" method="get">
+			        <input type="text" name="query" id="searchBox" placeholder="Search shops..." required>
+			        <button type="submit"><i class="fas fa-search"></i></button>
+			    </form>
+			    <a th:href="@{/ecom/shop_mng_page}" class="btn-add">Refresh <i class="fas fa-refresh"></i></a>
+			    <a th:href="@{/ecom/shop/register}" class="btn-add">New Shop <i class="fas fa-add"></i></a>
+			</div>
+	
+	        <table id="dataTable">
+	            <thead>
+	                <tr>
+	                    <th>Shop Name</th>
+	                    <th>Contact Email</th>
+	                    <th>Total Products</th>
+	                    <th>Contact Number</th>
+	                    <th>Status</th>
+	                    <th>Actions</th>
+	                </tr>
+	            </thead>
+	            <tbody>
+	                <tr th:each="s : ${shopPage.content}">
+	                    <td th:text="${s.shopName}"></td>
+	                    <td th:text="${s.ownerEmail}"></td>
+	                    <td th:text="${s.productShopList.size()}"></td>
+	                    <td th:text="${s.contactNumber}"></td>
+	                    <td>
+						    <span th:classappend="${s.status ? 'badge-open' : 'badge-closed'}" th:text="${s.status ? 'Open' : 'Closed'}"></span>
+						</td>
+	                    <td>
+	                        <div class="action-buttons">
+	                            <button class="action-btn verify-edit" th:if="!${s.isMember}" th:onclick="'verifyShop(this, ' + ${s.shopId} + ')'">
+	                                <i class="fas fa-check"></i>
+	                            </button>
+	                            <a th:href="@{/ecom/edit_shop/{shopId}(shopId=${s.shopId})}" class="action-btn verify-edit">
+	                                <i class="fas fa-edit"></i>
+	                            </a>
+	                            <a th:href="@{/ecom/admin/delete-shop/{shopId}(shopId=${s.shopId})}" 
+								   class="action-btn remove-btn" 
+								   onclick="confirmDelete(event, this.href)">
+								    <i class="fas fa-trash-alt"></i>
+								</a>
+	                        </div>
+	                    </td>
+	                </tr>
+	            </tbody>
+	        </table>
+	
+	        <!-- Pagination Controls -->
+	        <div class="pagination">
+			    <a th:if="${currentPage > 0}" th:href="@{/ecom/shop_mng_page(page=${currentPage - 1})}" class="page-btn">Previous</a>
+			
+			    <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+			        <a th:href="@{/ecom/shop_mng_page(page=${i})}" 
+			           th:text="${i + 1}" 
+			           th:classappend="${i == currentPage} ? 'active'" 
+			           class="page-btn">
+			        </a>
+			    </span>
+				
+			    <a th:if="${currentPage < totalPages - 1}" th:href="@{/ecom/shop_mng_page(page=${currentPage + 1})}" class="page-btn">Next</a>
+			</div>
+	    </div>
+	</div>
+
+	<script>   
+        function verifyShop(button, shopId) 
+        {
+        	button.style.display = 'none';
+            var endpoint = '/ecom/verify_shop/' + shopId;
+            window.location.href = endpoint;
+        }
+        
+        function confirmDelete(event, url) {
+            event.preventDefault(); // Prevent the default action (i.e., following the link)
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = url; // Redirect to the delete endpoint
+                }
+            });
+        }
+    </script>
+    
+    <script th:if="${error}">
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: '[[${error}]]'
+        });
+    </script>
+</body>
+</html>

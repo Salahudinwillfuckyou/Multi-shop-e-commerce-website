@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery Agent Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/home_admin_style.css}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+    	.action-buttons {
+		    display: flex;
+		    gap: 10px;
+		    align-items: center;
+		}
+		
+		.action-btn {
+		    background: transparent;
+		    border: none;
+		    cursor: pointer;
+		    padding: 5px;
+		    display: flex;
+		    align-items: center;
+		    justify-content: center;
+		}
+		
+		.verify-edit {
+		    color: #4CAF50; /* Green color for verify/edit */
+		    transition: color 0.3s ease;
+		}
+		
+		.verify-edit:hover {
+		    color: #45a049;
+		}
+		
+		.remove-btn {
+		    color: #f44336; /* Red color for remove */
+		    transition: color 0.3s ease;
+		}
+		
+		.remove-btn:hover {
+		    color: #da190b;
+		}
+		
+		.action-btn i {
+		    font-size: 16px;
+		}
+		
+		.order-history-container {
+            max-width: 1200px;
+            margin-left: 250px;
+            padding: 20px;
+        }
+
+        .filter-section {
+	        background: white;
+	        padding: 25px;
+	        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+	        margin-bottom: 30px;
+	        display: flex;
+	        flex-wrap: wrap;
+	        gap: 20px;
+	        align-items: flex-end;
+	    }
+	    
+	    .filter-btn {
+	        background: #004aad;
+	        color: white;
+	        padding: 10px 20px;
+	        border: none;
+	        border-radius: 4px;
+	        margin-top: 27px;
+	        cursor: pointer;
+	        display: flex;
+	        align-items: center;
+	        gap: 8px;
+	        height: 40px;
+	        transition: background 0.3s ease;
+	    }
+	    
+	    .filter-btn:hover {
+	        background: #003b8a;
+	    }
+	    
+	    .filter-form {
+	        display: flex;
+	        gap: 15px;
+	        flex-wrap: wrap;
+	        flex-grow: 1;
+	    }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-label {
+            color: #004aad;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .filter-input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .search-form {
+	        flex-grow: 1;
+	        max-width: 400px;
+	    }
+	    
+	    .search-btn {
+	        background: #28a745;
+	        color: white;
+	        padding: 0 15px;
+	        border: none;
+	        border-radius: 4px;
+	        height: 40px;
+	        cursor: pointer;
+	        transition: background 0.3s ease;
+	    }
+	    
+	    search-btn:hover {
+	        background: #218838;
+	    }
+	
+	    .search-input {
+	        flex: 1;
+	        height: 40px;
+	        padding: 0 10px;
+	        border: 1px solid #ddd;
+	        border-radius: 4px;
+	    }
+	
+	    @media (max-width: 768px) {
+	        .filter-form {
+	            flex-direction: column;
+	            width: 100%;
+	        }
+	        
+	        .search-form {
+	            max-width: 100%;
+	        }
+	        
+	        .filter-btn, .search-btn {
+	            width: 100%;
+	            justify-content: center;
+	        }
+	    }
+		
+		.accept-btn.loading .button-text {
+            display: none;
+        }
+        
+        .accept-btn.loading .fa-spinner {
+            display: inline-block !important;
+        }
+
+        .orders-table-shop {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .orders-table-shop th {
+            background-color: #f8f9fa;
+            color: #004aad;
+            padding: 15px;
+            text-align: left;
+        }
+       
+
+        .orders-table-shop td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+        }
+
+        .status-pending { background-color: #ffe066; color: #856404; }
+        .status-delivered { background-color: #b7e1cd; color: #0f5132; }
+        .status-in-transit { background-color: #f8d7da; color: #721c24; }
+
+        .action-btn {
+	        padding: 8px 12px;
+	        border: none;
+	        border-radius: 4px;
+	        cursor: pointer;
+	        transition: all 0.3s ease;
+	        display: inline-flex;
+	        align-items: center;
+	        justify-content: center;
+	        width: 36px;
+	        height: 36px;
+	    }
+	    
+	    .actions-container {
+	        display: flex;
+	        gap: 8px;
+	    }
+	    
+	    .accept-btn 
+	    {
+	    	padding: 10px;
+	    	width: 140px;
+	    	font-size: 15px;
+	        background-color: #28a745;  /* Teal blue color */
+	        color: white;
+	    }
+	
+	    .accept-btn:hover {
+	        background-color: #218838;  /* Darker teal */
+	    }
+	    
+	    	    .info-btn {
+	        background-color: #17a2b8;  /* Teal blue color */
+	        color: white;
+	    }
+	
+	    .info-btn:hover {
+	        background-color: #138496;  /* Darker teal */
+	    }
+
+
+        @media (max-width: 768px) {
+            .orders-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .filter-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .status-pending { background: #ffe066; color: #856404; }
+        .status-in-transit { background: #6c757d; color: white; }
+        .status-delivered { background: #28a745; color: white; }
+       
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+        	<a th:href="@{/ecom/deli/index}"><h2>Khine Myanmar</h2></a>
+            <h2>Delivery Agent</h2>
+            <ul class="nav-menu">
+			    <li><a th:href="@{/ecom/deli/index}" class="active">
+			        <i class="fas fa-tachometer-alt"></i>
+			        Dashboard
+			    </a></li>
+			    <li><a th:href="@{/ecom/deli/pendings}">
+			        <i class="fas fa-clock"></i>
+			        Pending Deliveries
+			    </a></li>
+			    <li><a th:href="@{/ecom/deli/transits}">
+			        <i class="fas fa-truck"></i>
+			        In Transit Deliveries
+			    </a></li>
+			    <li><a th:href="@{/ecom/deli/delivered-orders}">
+			        <i class="fas fa-check-circle"></i>
+			        Completed Deliveries
+			    </a></li>
+			    <li><a th:href="@{/ecom/deli/view-shop/{deliId}(deliId=${deli.shop.shopId})}">
+			        <i class="fas fa-store"></i>
+			        Your Shop
+			    </a></li>
+			    <li><a th:href="@{/ecom/deli/edit-profile}">
+			        <i class="fas fa-edit"></i>
+			        Edit Profile
+			    </a></li>
+			    <li><a th:href="@{/ecom/deli/login}">
+			        <i class="fas fa-sign-out-alt"></i>
+			        Logout
+			    </a></li>
+			</ul>
+        </div>
+   </div>
+            <!-- Active Deliveries -->
+            <main class="order-history-container">
+		        <div class="filter-section">
+				    <form th:action="@{/ecom/shop/filter-orders}" method="get" class="filter-form">
+				        <div class="filter-group">
+				            <label class="filter-label">Start Date</label>
+				            <input type="date" class="filter-input" name="startDate" id="startDate">
+				        </div>
+				        <div class="filter-group">
+				            <label class="filter-label">End Date</label>
+				            <input type="date" class="filter-input" name="endDate" id="endDate">
+				        </div>
+				        <button type="submit" class="filter-btn">
+				            <i class="fas fa-filter"></i> Filter
+				        </button>
+				    </form>
+				
+				    <!-- Search Form -->
+				    <form th:action="@{/ecom/shop/search-orders}" method="get" class="search-form">
+				        <div class="filter-group">
+				            <label class="filter-label">Search Order</label>
+				            <div class="search-box">
+				                <input type="text" class="search-input" name="orderId" placeholder="Order ID...">
+				                <button type="submit" class="search-btn">
+				                    <i class="fas fa-search"></i>
+				                </button>
+				            </div>
+				        </div>
+				    </form>
+				</div>
+		
+		        <table class="orders-table-shop">
+		            <thead>
+		                <tr>
+		                    <th>Order ID</th>
+		                    <th>Ordered Date</th>
+		                    <th>Due Date</th>
+		                    <th>Address</th>
+		                    <th>Customer</th>
+		                    <th>Actions</th>
+		                </tr>
+		            </thead>
+		            <tbody>
+		                <tr th:each="order : ${orders}">
+		                    <td th:text="${order.orderId}"></td>
+		                    <td th:text="${#temporals.format(order.orderedDate, 'yyyy-MM-dd HH:mm')}"></td>
+		                    <td th:text="${#temporals.format(order.dueDate, 'yyyy-MM-dd HH:mm')}"></td>
+		                    <td th:text="${order.customer.address}"></td>
+							<td th:text="${order.customer.firstName + ' ' + order.customer.lastName}"></td>
+		                    <td>
+							    <div class="actions-container">
+							        <form class="accept-form" th:action="@{/ecom/deli/complete-order/{orderId}(orderId=${order.orderId})}" method="get">
+							            <button type="submit" class="action-btn accept-btn">
+							                <span class="button-text">Mark as Delivered</span>
+				                            <i class="fas fa-spinner fa-spin" style="display: none;"></i>				            
+							            </button>
+							        </form>
+							        <form th:action="@{/ecom/deli/view-order-detail/{orderId}(orderId=${order.orderId})}" method="get">
+							            <button type="submit" class="action-btn info-btn">
+							                <i class="fas fa-info-circle"></i>
+							            </button>
+							        </form>
+							    </div>
+							</td>
+		                </tr>
+		            </tbody>
+		        </table>
+		    </main>
+    
+    <script>
+	    document.addEventListener('DOMContentLoaded', function() {
+	        // Handle accept form submissions
+	        document.querySelectorAll('.accept-form').forEach(form => {
+	            form.addEventListener('submit', async (e) => {
+	                e.preventDefault();
+	                const button = form.querySelector('.accept-btn');
+	                const url = form.getAttribute('action');
+	
+	                // Show loading state
+	                button.classList.add('loading');
+	                button.disabled = true;
+	
+	                try {
+	                    const response = await fetch(url, {
+	                        method: 'GET',
+	                        headers: {
+	                            'Accept': 'application/json',
+	                        },
+	                    });
+	
+	                    if (!response.ok) throw new Error('Failed to accept order');
+	                    
+	                    // Show SweetAlert confirmation
+	                    await Swal.fire({
+	                        title: 'Order Accepted!',
+	                        text: 'The order has been successfully delivered!',
+	                        icon: 'success',
+	                        confirmButtonColor: '#004aad',
+	                        confirmButtonText: 'OK'
+	                    });
+	
+	                    // Redirect after confirmation
+	                    window.location.href = '/ecom/deli/delivered-orders';
+	
+	                } catch (error) {
+	                    console.error('Error:', error);
+	                    Swal.fire({
+	                        title: 'Error!',
+	                        text: 'Failed to accept order. Please try again.',
+	                        icon: 'error',
+	                        confirmButtonColor: '#dc3545'
+	                    });
+	                } finally {
+	                    button.classList.remove('loading');
+	                    button.disabled = false;
+	                }
+	            });
+	        });
+	    });
+    </script>
+</body>
+</html>
