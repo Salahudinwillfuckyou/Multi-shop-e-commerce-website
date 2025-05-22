@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grab Turtle | Home</title>
+    <link rel="stylesheet" th:href="@{/css/home_customer_style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Main Header -->
+    <header>
+        <h1>Khine Myanmar</h1>
+	 		<div class="menu-section">
+            <div class="button-section">
+                <div class="profile-view">
+                    <img th:src="@{${customer.profileImage}}" alt="Profile">
+                    <p style="color: black;"><span th:text="${customer.firstName} + ' ' + ${customer.lastName}"></span></p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Secondary Header for Navigation -->
+    <div class="nav-header">
+        <nav>
+            <a th:href="@{/ecom/user/home}">Home</a>
+            <a th:href="@{/ecom/user/view-shops}">Shops</a>
+            <a th:href="@{/ecom/user/view-products}">Products</a>
+            <a th:href="@{/ecom/user/order-history}">Your Orders</a>
+            <a th:href="@{/ecom/user/edit-profile}">Edit Profile</a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <div class="hero-image">
+                    <div class="carousel">
+                        <div class="carousel-container">
+                            <img class="carousel-slide" th:src="@{/Images/customer_images/hero_section.webp}" alt="Delicious Burger 1">
+                            <img class="carousel-slide" th:src="@{/Images/customer_images/hero_section2.webp}" alt="Delicious Burger 2">
+                            <img class="carousel-slide" th:src="@{/Images/customer_images/hero_section3.webp}" alt="Delicious Burger 3">
+                            <img class="carousel-slide" th:src="@{/Images/customer_images/hero_section4.jpg}" alt="Delicious Burger 3">
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-text">
+                    <h1>Khine Myanmar</h1>
+                    <p>Your trusted online marketplace for authentic Myanmar products. Quality guaranteed with seamless shopping experience.</p>
+                    <a th:href="@{/ecom/user/view-products}" class="cta-button" id="orderButton">Order Now</a>
+                </div>
+            </div>
+        </section>
+        
+        <section class="categories">
+		    <h1>Product Categories</h1>
+		    <div class="category-list">
+			    <div th:if="${#lists.isEmpty(categories)}">
+			        <p class="no-categories">No categories have been added</p>
+			    </div>
+
+				<a th:each="category, iterStat : ${categories}" 
+				   class="category" 
+				   th:classappend="' category-' + ${iterStat.index % 4}"
+				   th:href="@{/ecom/user/view-products(categoryId=${category.categoryId})}"> <!-- Updated href -->
+				   <h3 th:text="${category.categoryName}"></h3>
+				</a>
+			</div>
+		</section>
+        
+        <section class="shops">
+            <h2>Featured Shops > <a th:href="@{/ecom/user/view-shops}">See All Shops</a></h2>
+            <div class="shop-list">
+	            <div th:each="shop : ${featuredShops}" class="shop">
+                    <img class="shop-photo" th:src="@{${shop.shopImage}}" alt="Shop Image">
+                    <h1 th:text="${shop.shopName}"></h1>
+                    <p th:text="${shop.description}"></p>
+                    <a th:href="@{/ecom/user/view-shop/{shopId}(shopId=${shop.shopId})}" class="view-shop-btn">View Shop</a>
+                </div>
+        	</div>
+        </section>
+        
+	</main>
+
+	<footer>
+	    <div class="footer-container">
+	        <div class="footer-section">
+	            <h4>About Us</h4>
+	            <p>Khine Myanmar - Your trusted online marketplace for authentic Myanmar products. Quality guaranteed with seamless shopping experience.</p>
+	        </div>
+	        <div class="footer-section">
+	            <h4>Customer Service</h4>
+	            <ul>
+	                <li><a href="#">Contact Us</a></li>
+	                <li><a href="#">Shipping Policy</a></li>
+	                <li><a href="#">Returns & Exchanges</a></li>
+	                <li><a href="#">FAQs</a></li>
+	            </ul>
+	        </div>
+	        <div class="footer-section">
+	            <h4>Follow Us</h4>
+	            <div class="social-links">
+	                <a href="#"><i class="fab fa-facebook"></i></a>
+	                <a href="#"><i class="fab fa-instagram"></i></a>
+	                <a href="#"><i class="fab fa-twitter"></i></a>
+	                <a href="#"><i class="fab fa-linkedin"></i></a>
+	            </div>
+	        </div>
+	    </div>
+	    <div class="footer-bottom">
+	        <p>© 2023 Khine Myanmar. All rights reserved.</p>
+	    </div>
+	</footer>
+       
+    <script>
+        let currentIndex = 0;
+
+        function showSlide(index) {
+            const slides = document.querySelectorAll(".carousel-slide");
+            const totalSlides = slides.length;
+
+            // Wrap around slide index
+            if (index < 0) currentIndex = totalSlides - 1;
+            else if (index >= totalSlides) currentIndex = 0;
+            else currentIndex = index;
+
+            // Move carousel
+            const carouselContainer = document.querySelector(".carousel-container");
+            const offset = -currentIndex * 100; // Slide width percentage
+            carouselContainer.style.transform = `translateX(${offset}%)`;
+        }
+
+        function prevSlide() {
+            showSlide(currentIndex - 1);
+        }
+
+        function nextSlide() {
+            showSlide(currentIndex + 1);
+        }
+
+        // Auto-slide (optional)
+        setInterval(() => nextSlide(), 5000); // Change slide every 5 seconds
+
+        document.querySelector(".profile-button").addEventListener("click", function () {
+            const dropdown = document.querySelector(".dropdown-content");
+            dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+        });
+        
+    </script>
+</body>
+</html>

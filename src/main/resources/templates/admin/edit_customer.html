@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Management | Admin | Grab Turtle</title>
+    <link rel="stylesheet" th:href="@{/css/home_admin_style.css}">
+    <link rel="stylesheet" th:href="@{/css/edit-style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="sidebar">
+        	<a th:href="@{/ecom/admin_home}"><h2>Khine Myanmar</h2></a>
+            <h2>Administrator</h2>
+            <ul class="nav-menu">
+			    			    <li><a th:href="@{/ecom/admin_home}" class="active">
+			        <i class="fas fa-tachometer-alt"></i>
+			        Dashboard
+			    </a></li>
+			    <li><a th:href="@{/ecom/shop_mng_page}">
+			        <i class="fas fa-store"></i>
+			        Shops
+			    </a></li>
+			    <li><a th:href="@{/ecom/delivery_mng_page}">
+			        <i class="fas fa-truck"></i>
+			        Delivery Agents
+			    </a></li>
+			    <li><a th:href="@{/ecom/view-orders}">
+			        <i class="fas fa-shopping-cart"></i>
+			        Orders
+			    </a></li>
+			    <li><a th:href="@{/ecom/customer_mng_page}">
+			        <i class="fas fa-user"></i>
+			        Customers
+			    </a></li>
+			    <li><a th:href="@{/ecom/product_mng_page}">
+			        <i class="fas fa-box"></i>
+			        Products
+			    </a></li>
+			    <li><a th:href="@{/ecom/product_category_mgn_page}">
+			        <i class="fas fa-list"></i>
+			        Categories
+			    </a></li>
+			    <li><a th:href="@{/ecom/edit-profile/{adminId}(adminId=${admin.adminId})}">
+			        <i class="fas fa-edit"></i>
+			        Edit Profile
+			    </a></li>
+			    <li><a th:href="@{/ecom/deli/login}">
+			        <i class="fas fa-sign-out-alt"></i>
+			        Log out
+			    </a></li>
+			</ul>
+        </div>
+    
+    <div class="edit-container">
+	    <form th:action="@{/ecom/update_customer/{customerId}(customerId=${customerTmp.customerId})}" method="post" enctype="multipart/form-data" th:object="${customer}">
+	    	<div class="form-container">
+	    		<div class="image-section">
+	                <img th:src="@{${customerTmp.profileImage}}" id="customerImagePreview" alt="Customer Image">
+	                <label class="file">
+	                    <input type="file" name="file" id="file" accept="image/*" onchange="previewImage(this)">
+	                    Change Photo
+	                </label>
+	            </div>
+	            
+	            <div class="form-fields">
+	            	<div class="form-group">
+			            <label for="first-name">First Name</label>
+			            <input type="text" id="first-name" th:field="${customerTmp.firstName}" name="first_name" th:placeholder="${customerTmp.firstName}">
+			        </div>
+			        <div class="form-group">
+			            <label for="last-name">Last Name</label>
+			            <input type="text" id="last-name" th:field="${customerTmp.lastName}" name="last_name" th:placeholder="${customerTmp.lastName}">
+			        </div>
+			        <div class="form-group">
+			            <label for="email">Email</label>
+			            <input type="email" id="email" th:field="${customerTmp.email}" name="email" th:placeholder="${customerTmp.email}">
+			        </div>
+			        <div class="form-group">
+			            <label for="contact">Phone Number</label>
+			            <input type="tel" id="contact" th:field="${customerTmp.phoneNumber}" name="contact" th:placeholder="${customerTmp.phoneNumber}">
+			        </div>
+			        <div class="form-group">
+			            <label for="address">Address</label>
+			            <textarea id="address" th:field="${customerTmp.address}" name="address" rows="3" th:placeholder="${customerTmp.address}" required></textarea>
+			        </div>
+			        <div class="form-group">
+			            <label for="isMember">Set Member</label>
+			            <select id="isMember" th:field="${customerTmp.member}" name="isMember" required>
+			                <option value="true">True</option>
+			                <option value="false">False</option>
+			            </select>
+			        </div>
+			        <button type="submit">Save</button>
+	            </div>
+	    	</div>
+	    </form>
+	</div>
+
+	<script>
+	function toggleDropdown(event, dropdownId) 
+        {
+            removeRedDot();
+            event.stopPropagation();
+            const dropdowns = document.querySelectorAll('.dropdown-content, .dropdown-noti');
+            dropdowns.forEach(dropdown => {
+                if (dropdown.id !== dropdownId) {
+                    dropdown.classList.remove('show');
+                }
+            });
+            const dropdown = document.getElementById(dropdownId);
+            dropdown.classList.toggle('show');
+        }
+
+        window.onclick = function () {
+            const dropdowns = document.querySelectorAll('.dropdown-content, .dropdown-noti');
+            dropdowns.forEach(dropdown => {
+                dropdown.classList.remove('show');
+            });
+        };
+        
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('customerImagePreview').src = e.target.result;
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+</body>
+</html>

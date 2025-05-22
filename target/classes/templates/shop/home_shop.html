@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop Dashboard | Grab Turtle</title>
+    <link rel="stylesheet" th:href="@{/css/home_admin_style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+    	.metrics
+    	{
+    		margin-left: 250px;
+    	}
+    	.header
+    	{
+    		margin-left: 250px;
+    	}
+    	.charts-container
+    	{
+    		margin-left: 250px;
+    	}
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        	<a th:href="@{/ecom/shop/index}"><h2>Khine Myanmar</h2></a>
+            <h2>Shop Administrator</h2>
+            <ul class="nav-menu">
+			    <li><a th:href="@{/ecom/shop/index}" class="active">
+			        <i class="fas fa-tachometer-alt"></i>
+			        Dashboard
+			    </a></li>
+			    <li><a th:href="@{/ecom/shop/view-orders}">
+			        <i class="fas fa-shopping-cart"></i>
+			        Orders
+			    </a></li>
+			    <li><a th:href="@{/ecom/shop/deliveries}">
+			        <i class="fas fa-truck"></i>
+			        Delivery Agents
+			    </a></li>
+			    <li><a th:href="@{/ecom/shop/products}">
+			        <i class="fas fa-box"></i>
+			        Products
+			    </a></li>
+			    <li><a th:href="@{/ecom/shop/edit-shop/{shopId}(shopId=${shop.shopId})}">
+			        <i class="fas fa-edit"></i>
+			        Edit Shop Profile
+			    </a></li>
+			    <li><a th:href="@{/ecom/shop/login}">
+			        <i class="fas fa-sign-out-alt"></i>
+			        Log out
+			    </a></li>
+			</ul>
+        </div>
+        
+        <div class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <h1 th:text="'Welcome Admin of ' + ${shop.shopName}"></h1>
+            </div>
+
+            <!-- Metrics -->
+            <div class="metrics">
+                <div class="metric-card">
+                    <h3>Total Products</h3>
+                    <p th:text="${productSize}"></p>
+                </div>
+                <div class="metric-card">
+                    <h3>Total Sales</h3>
+                    <p th:text="${totalSales} + ' MMK'"></p>
+                </div>
+                <div class="metric-card">
+                    <h3>Total Orders</h3>
+                    <p th:text="${orderSize}"></p>
+                </div>
+                <div class="metric-card">
+                    <h3>Today Sales</h3>
+                    <p th:text="${todaySales} + ' MMK'"></p>
+                </div>
+                <div class="metric-card">
+                    <h3>Total Deli-agents</h3>
+                    <p th:text="${deliSize}"></p>
+                </div>
+            </div>
+            
+            <div class="recent-orders">
+            <h2>Recent Orders</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Example data - replace with Thymeleaf -->
+                    <tr th:each="order : ${orders}">
+                        <td th:text="${order.id}">#1234</td>
+                        <td th:text="${order.customer.name}">John Doe</td>
+                        <td th:text="${order.date}">2023-07-20</td>
+                        <td th:text="'$' + ${order.amount}">$150.00</td>
+                        <td>
+                            <span class="status" th:classappend="${order.status == 'Completed'} ? 'completed' : 'pending'" 
+                                  th:text="${order.status}">Pending</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="charts-container">
+            <div class="chart-card">
+                <h3>Sales by Category</h3>
+                <canvas id="donutChart"></canvas>
+            </div>
+            <div class="chart-card">
+                <h3>Sales Overview</h3>
+                <canvas id="lineChart"></canvas>
+            </div>
+        </div>
+       </div>
+
+
+    
+    <script>
+	    const donutCtx = document.getElementById('donutChart').getContext('2d');
+	    new Chart(donutCtx, {
+	        type: 'doughnut',
+	        data: {
+	            labels: ['Category 1', 'Category 2', 'Category 3'], // Replace with Thymeleaf: th:inline="javascript" /*[[${categoryNames}]]*/
+	            datasets: [{
+	                label: 'Sales by Category',
+	                data: [30, 50, 20], // Replace with Thymeleaf: /*[[${categoryCounts}]]*/
+	                backgroundColor: [
+	                    '#FF6384',
+	                    '#36A2EB',
+	                    '#FFCE56'
+	                ],
+	                hoverOffset: 4
+	            }]
+	        },
+	        options: {
+	            responsive: true,
+	            plugins: {
+	                legend: {
+	                    position: 'bottom'
+	                }
+	            }
+	        }
+	    });
+	
+	    // Line Chart
+	    const lineCtx = document.getElementById('lineChart').getContext('2d');
+	    new Chart(lineCtx, {
+	        type: 'line',
+	        data: {
+	            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'], // Replace with Thymeleaf: /*[[${months}]]*/
+	            datasets: [{
+	                label: 'Monthly Sales',
+	                data: [65, 59, 80, 81, 56, 55], // Replace with Thymeleaf: /*[[${monthlySalesData}]]*/
+	                fill: false,
+	                borderColor: '#4CAF50',
+	                tension: 0.1
+	            }]
+	        },
+	        options: {
+	            responsive: true,
+	            scales: {
+	                y: {
+	                    beginAtZero: true
+	                }
+	            },
+	            plugins: {
+	                legend: {
+	                    position: 'bottom'
+	                }
+	            }
+	        }
+	    });
+    </script>
+</body>
+</html>

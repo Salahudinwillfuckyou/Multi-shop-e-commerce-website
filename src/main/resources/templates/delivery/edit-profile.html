@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile | Delivery</title>
+    <link rel="stylesheet" th:href="@{/css/home_admin_style.css}">
+    <link rel="stylesheet" th:href="@{/css/edit-style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+</head>
+<body>
+
+        <div class="sidebar">
+        	<a th:href="@{/ecom/admin_home}"><h2>Khine Myanmar</h2></a>
+            <h2>Delivery Agent</h2>
+            <ul class="nav-menu">
+			    <li><a th:href="@{/ecom/deli/index}" class="active">
+			        <i class="fas fa-tachometer-alt"></i>
+			        Dashboard
+			    </a></li>
+			    <li><a th:href="@{/ecom/deli/pendings}">
+			        <i class="fas fa-clock"></i>
+			        Pending Deliveries
+			    </a></li>
+			    <li><a th:href="@{/ecom/deli/transits}">
+			        <i class="fas fa-truck"></i>
+			        In Transit Deliveries
+			    </a></li>
+			    <li><a th:href="@{/ecom/deli/delivered-orders}">
+			        <i class="fas fa-check-circle"></i>
+			        Completed Deliveries
+			    </a></li>
+			    <li><a th:href="@{/ecom/deli/view-shop/{deliId}(deliId=${deliTmp.shop.shopId})}">
+			        <i class="fas fa-store"></i>
+			        Your Shop
+			    </a></li>
+			    <li><a th:href="@{/ecom/deli/edit-profile}">
+			        <i class="fas fa-edit"></i>
+			        Edit Profile
+			    </a></li>
+			    <li><a th:href="@{/ecom/deli/login}">
+			        <i class="fas fa-sign-out-alt"></i>
+			        Logout
+			    </a></li>
+			</ul>
+        </div>
+    
+    <div class="edit-container">
+	    <form th:action="@{/ecom/deli/update_deli/{deliId}(deliId=${deliTmp.deliveryPersonId})}" method="post" enctype="multipart/form-data" th:object="${deli}">
+	        <div class="form-container">
+	        	<div class="image-section">
+	                <img th:src="@{${deliTmp.profileImage}}" id="deliImagePreview" alt="Deli Image">
+	                <label class="file">
+	                    <input type="file" name="file" id="file" accept="image/*" onchange="previewImage(this)">
+	                    Change Photo
+	                </label>
+	            </div>
+	            
+	            <div class="form-fields">
+	            	<div class="form-group">
+	            		<label for="first-name">First Name</label>
+	            		<input type="text" id="first-name" th:field="${deliTmp.firstName}" name="first_name" th:placeholder="${deliTmp.firstName}">
+	        		</div>
+	        		<div class="form-group">
+	            		<label for="last-name">Last Name</label>
+	            		<input type="text" id="last-name" th:field="${deliTmp.lastName}" name="last-name" th:placeholder="${deliTmp.lastName}">
+	        		</div>
+			        <div class="form-group">
+			            <label for="email">Email</label>
+			            <input type="email" id="email" th:field="${deliTmp.email}" name="email" th:placeholder="${deliTmp.email}">
+			        </div>
+			        <div class="form-group">
+			            <label for="phone">Phone Number</label>
+			            <input type="tel" id="phone" th:field="${deliTmp.phoneNumber}" name="phone" rows="3" th:placeholder="${deliTmp.phoneNumber}" required></input>
+			        </div>
+			        <div class="form-group">
+			            <label for="address">Address</label>
+			            <textarea id="address" th:field="${deliTmp.address}" name="address" rows="3" th:placeholder="${deliTmp.address}" required></textarea>
+			        </div>
+			        <div class="form-group">
+			            <label for="shop">Shop</label>
+			            <input type="text" id="shop" th:field="${deliTmp.shop.shopName}" name="shop" th:placeholder="${deliTmp.shop.shopName}" readonly>
+			        </div>
+			        <div class="form-group">
+			            <label for="isMember">Set Member</label>
+			            <select id="isMember" th:field="${deliTmp.member}" name="isMember" required>
+			                <option value="true">True</option>
+			                <option value="false">False</option>
+			            </select>
+			        </div>
+	        		<button type="submit">Save</button>
+	            </div>
+	        </div>
+	    </form>
+	</div>
+
+	<script>
+        
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('deliImagePreview').src = e.target.result;
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+</body>
+</html>

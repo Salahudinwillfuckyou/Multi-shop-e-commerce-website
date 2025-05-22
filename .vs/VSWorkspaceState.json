@@ -1,0 +1,14 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\src",
+    "\\src\\main",
+    "\\src\\main\\java",
+    "\\src\\main\\java\\com",
+    "\\src\\main\\java\\com\\multishop",
+    "\\src\\main\\java\\com\\multishop\\model",
+    "\\src\\main\\java\\com\\multishop\\service"
+  ],
+  "SelectedNode": "\\src\\main\\java\\com\\multishop\\service\\AdminService.java",
+  "PreviewInSolutionExplorer": false
+}

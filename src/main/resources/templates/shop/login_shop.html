@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop Log In | Khine Myanmar</title>
+    <link rel="stylesheet" th:href="@{/css/login-style.css}">
+    <script>
+        function handleLoginError(message) {
+            if (message) {
+                alert(message);
+                document.getElementById("loginForm").reset();
+            }
+        }
+    </script>
+</head>
+<body th:attr="onload=${errorMessage} != null ? 'handleLoginError(\'' + ${errorMessage} + '\')' : null">    
+	<div class="register-container">
+        <h2>Log In Shop</h2>
+        <form th:action="@{/ecom/shop/login-shop}" method="get">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="Enter email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter password" required>
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" id="showPassword" onchange="toggleShowPassword()">
+                <label for="showPassword">Show Password</label>
+            </div>
+            <button type="submit">Log In</button>
+            Don't have an account? <a th:href="@{/ecom/shop/register}">Register Here</a>
+        </form>
+    </div>
+    <script>
+        function toggleShowPassword() {
+            const showPassword = document.getElementById('showPassword').checked;
+            document.getElementById('password').type = showPassword ? 'text' : 'password';
+        }
+    </script>
+</body>
+</html>

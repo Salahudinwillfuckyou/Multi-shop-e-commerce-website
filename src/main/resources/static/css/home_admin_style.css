@@ -1,0 +1,368 @@
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: #f5f7fa;
+            padding: 20px;
+        }
+
+        .container {
+		    max-width: 1400px;
+		    margin-left: 250px;
+		    padding: 20px;
+		    display: block;
+		}
+
+        /* Sidebar */
+        .sidebar {
+		    background: white;
+		    padding: 20px;
+		    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+		    position: fixed;
+		    left: 0;
+		    top: 0;
+		    height: 100vh;
+		    width: 250px;
+		    overflow-y: auto; /* Allows scrolling if content exceeds viewport height */
+		    z-index: 1000; /* Ensures sidebar stays above other content */
+		}
+
+        .sidebar h2 {
+            font-size: 1.2rem;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar ul li {
+            margin: 15px 0;
+        }
+        a
+        {
+        	text-decoration: none;
+        }
+
+        .sidebar ul li a {
+            text-decoration: none;
+            color: #555;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar ul li a:hover {
+            color:  #004aad;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            color: #333;
+        }
+
+        .header .notifications {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .header .notifications .badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ff4757;
+            color: white;
+            font-size: 0.7rem;
+            padding: 3px 6px;
+            border-radius: 50%;
+        }
+        
+
+    	.charts-container {
+            display: flex;
+            gap: 20px;
+        }
+
+        .chart-card {
+            flex: 1;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* Dashboard Metrics */
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .metric-card {
+            background:#004aad;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .metric-card h3 {
+            font-size: 1rem;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .metric-card p {
+            font-size: 1.5rem;
+            color: white;
+            font-weight: bold;
+        }
+        
+		.recent-orders {
+            margin-left: 250px;
+            padding: 20px;
+            background: white;
+            margin-top: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f5f5f5;
+        }
+
+        /* table design */
+        .table-container {
+            width: 80%;
+            padding: 20px;
+            padding-top: 0px;
+            background-color: #fff;
+            margin-left: 250px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            height: 550px; /* Fixed height for the container */
+            overflow-y: auto; /* Enable vertical scrollbar */
+            position: relative;
+        }
+        
+        .search {
+		    display: flex;
+		    flex-grow: 1; /* Allows the search bar to take up available space */
+		}
+		
+		.search input[type="text"] {
+		    flex-grow: 0.3;
+		    padding: 8px;
+		    border: 1px solid #ccc;
+			margin-right:10px;
+		}
+		
+		.search button {
+		    padding: 8px 12px;
+		    border: none;
+		    background-color: #007bff;
+		    color: white;
+		    cursor: pointer;
+		}
+
+        .search-bar {
+            margin-bottom: 10px; /* Adjust spacing */
+            position: sticky;
+            top: 0;
+            z-index: 2; /* Ensure search bar stays on top */
+            background-color: #fff; /* Match container background */
+            padding: 10px 0; /* Add padding to visually separate it */
+            display: flex;
+		    align-items: center;
+		    gap: 10px; /* Adjust the space between the search bar and the button */
+        }
+
+        .search-bar input {
+            width: 200px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            font-size: 14px;
+        }
+        
+        .search-bar input:focus
+        {
+        	outline: none;
+		    border-color: #004aad;
+		    box-shadow: 0 0 0 2px #004aad;
+        }
+        
+
+        .search-bar button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #004aad;
+            color: #fff;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .search-bar button:hover {
+            background-color: #0080ff;
+        }
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table thead {
+            top: 50px; /* Adjust based on the search bar's height */
+            background-color: #f4f4f4; /* Ensure header has a background color */
+            z-index: 1;
+        }
+
+        table th, table td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .table-container {
+            overflow-x: auto; /* Add horizontal scrollbar if needed */
+        }
+        
+        .btn-add {
+		    padding: 8px 12px;
+		    background-color: #004aad;
+		    color: white;
+		    text-decoration: none;
+		    display: flex;
+		    align-items: center;
+		    gap: 5px;
+		}
+		
+		.btn-add i {
+		    font-size: 14px;
+		}
+	
+	.pagination {
+	    text-align: left;
+	    margin-top: 20px;
+	}
+	
+	.page-btn {
+	    display: inline-block;
+	    padding: 8px 15px;
+	    margin: 0 5px;
+	    text-decoration: none;
+	    color: #333;
+	    background-color: #f1f1f1;
+	    border-radius: 5px;
+	    transition: 0.3s;
+	    font-weight: bold;
+	}
+	
+	.page-btn:hover {
+	    background-color: #007bff;
+	    color: #fff;
+	}
+	
+	.page-btn.active {
+	    background-color: #007bff;
+	    color: white;
+	    pointer-events: none;
+	    font-weight: bold;
+	}
+	
+	.page-btn:disabled {
+	    background-color: #ccc;
+	    color: #666;
+	    pointer-events: none;
+	}
+	
+		.action-buttons {
+		    display: flex;
+		    gap: 10px;
+		    align-items: center;
+		}
+		
+		.action-btn {
+		    background: transparent;
+		    border: none;
+		    cursor: pointer;
+		    padding: 5px;
+		    display: flex;
+		    align-items: center;
+		    justify-content: center;
+		}
+		
+		.verify-edit {
+		    color: #4CAF50; /* Green color for verify/edit */
+		    transition: color 0.3s ease;
+		}
+		
+		.verify-edit:hover {
+		    color: #45a049;
+		}
+		
+		.remove-btn {
+		    color: #f44336; /* Red color for remove */
+		    transition: color 0.3s ease;
+		}
+		
+		.remove-btn:hover {
+		    color: #da190b;
+		}
+		
+		.action-btn i {
+		    font-size: 16px;
+		}
+	
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .table-container {
+                width: 95%;
+            }
+
+            .search-bar input {
+                width: 70%;
+            }
+
+            .search-bar button {
+                width: 30%;
+            }
+        }
+        

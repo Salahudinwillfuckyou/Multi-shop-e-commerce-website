@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${shop.shopName + ' | Khine Myanmar'}"></title>
+    <link rel="stylesheet" th:href="@{/css/home_customer_style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+		body {
+		  margin: 0;
+		  font-family: 'Arial', sans-serif;
+		  background-color: #f4f7f9;
+		  color: #333;
+		}
+		
+		main {
+		  padding: 20px 50px 100px;
+		  margin-top: 100px;
+		}
+		
+		/* Shop Info Section */
+		.shop-container {
+		  display: flex;
+		  align-items: center;
+		  gap: 30px;
+		  background: #fff;
+		  padding: 20px;
+		  border-radius: 8px;
+		  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+		  margin-top: 100px;
+		}
+		
+		.shop-image img {
+		  width: 200px;
+		  height: 200px;
+		  border-radius: 8px;
+		  object-fit: cover;
+		  border: 2px solid #004aad;
+		}
+		
+		.shop-details {
+		  display: flex;
+		  flex-direction: column;
+		  gap: 10px;
+		}
+		
+		/* Add phone icon to the first h4 */
+		.shop-details h4:nth-of-type(1)::before {
+		  content: "\f095"; /* phone icon */
+		  font-family: "Font Awesome 6 Free";
+		  font-weight: 900;
+		  margin-right: 8px;
+		  color: #004aad;
+		}
+		
+		/* Add envelope icon to the second h4 */
+		.shop-details h4:nth-of-type(2)::before {
+		  content: "\f0e0"; /* envelope icon */
+		  font-family: "Font Awesome 6 Free";
+		  font-weight: 900;
+		  margin-right: 8px;
+		  color: #004aad;
+		}
+		
+		.shop-details h1 {
+		  font-size: 2rem;
+		  margin: 0;
+		}
+		
+		.shop-details h4,
+		.shop-details h6 {
+		  margin: 0;
+		  font-weight: normal;
+		}
+		
+		/* Open/Close Indicator */
+		.shop-details h6 .fa-door-open {
+		  color: green;
+		}
+		
+		.shop-details h6 .fa-door-closed {
+		  color: red;
+		}
+		
+		.shop-details h6 span {
+		  margin-left: 5px;
+		  font-weight: bold;
+		  color: inherit;
+		}
+		
+		/* Search Section */
+		.search {
+		  margin: 40px 0;
+		  display: flex;
+		  flex-direction: column;
+		  gap: 20px;
+		}
+		
+		.search input {
+		  width: 100%;
+		  max-width: 400px;
+		  padding: 10px 15px;
+		  border: 1px solid #ddd;
+		  border-radius: 4px;
+		  font-size: 14px;
+		}
+		
+		.search button {
+		  padding: 10px 20px;
+		  border: none;
+		  background-color: #004aad;
+		  color: #fff;
+		  font-size: 14px;
+		  border-radius: 4px;
+		  cursor: pointer;
+		  transition: background-color 0.3s;
+		}
+		
+		.search button:hover {
+		  background-color: #0080ff;
+		}
+		
+		/* Category Filter */
+		.category-filter {
+		  display: flex;
+		  gap: 10px;
+		  overflow-x: auto;
+		}
+		
+		.category-filter button {
+		  padding: 8px 15px;
+		  border: 1px solid #004aad;
+		  border-radius: 20px;
+		  background-color: #fff;
+		  color: #004aad;
+		  cursor: pointer;
+		  white-space: nowrap;
+		}
+		
+		/* Product Section */
+		.product-container {
+		  display: grid;
+		  grid-template-columns: repeat(4, 1fr); /* 4 columns */
+		  gap: 60px;
+		  margin-bottom: 40px;
+		}
+		
+		.product-card {
+		  background: #fff;
+		  border: 1px solid #ddd;
+		  border-radius: 8px;
+		  padding: 15px;
+		  display: flex;
+		  flex-direction: column;
+		  gap:10px;
+		  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+		  transition: transform 0.2s;
+		  width: 200px;
+		}
+		
+		.product-card:hover {
+		  transform: translateY(-5px);
+		}
+		
+		.product-image {
+		  width: 100%;
+		  height: 200px;
+		  overflow: hidden;
+		  border-radius: 8px;
+		}
+		
+		.product-image img {
+		  width: 100%;
+		  height: 100%;
+		  object-fit: cover;
+		}
+		
+		.product-details h6 {
+		  font-size: 1.1rem;
+		  margin: 0;
+		  white-space: nowrap;
+		  overflow: hidden;
+		  text-overflow: ellipsis;
+		}
+		
+		.product-details p {
+		  margin: 5px 0;
+		  font-size: 0.9rem;
+		  color: #666;
+		}
+		
+		.product-details b {
+		  font-size: 1rem;
+		  color: #004aad;
+		}
+		
+		/* Product Actions */
+		.product-actions {
+		  margin-top: auto;
+		  text-align: right;
+		}
+		
+		.product-actions button {
+		  border: none;
+		  background: none;
+		  cursor: pointer;
+		  padding: 5px;
+		  transition: transform 0.2s;
+		}
+		
+		.product-actions button:hover {
+		  transform: scale(1.1);
+		}
+		
+		/* Modal Styles */
+		.modal {
+		  display: none;
+		  position: fixed;
+		  top: 50%;
+		  left: 50%;
+		  transform: translate(-50%, -50%);
+		  background: #fff;
+		  padding: 30px;
+		  border-radius: 8px;
+		  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+		  z-index: 1000;
+		  width: 90%;
+		  max-width: 400px;
+		}
+		
+		.modal.active {
+		  display: block;
+		}
+		
+		.modal h3 {
+		  margin-top: 0;
+		  font-size: 1.5rem;
+		  color: #004aad;
+		}
+		
+		.modal p {
+		  font-size: 0.9rem;
+		  color: #666;
+		}
+		
+		.quantity-controls {
+		  display: flex;
+		  align-items: center;
+		  gap: 10px;
+		  margin: 20px 0;
+		}
+		
+		.quantity-btn {
+		  padding: 5px 15px;
+		  border: 1px solid #004aad;
+		  background: #fff;
+		  color: #004aad;
+		  cursor: pointer;
+		  border-radius: 4px;
+		  transition: background 0.3s, color 0.3s;
+		}
+		
+		.quantity-btn:disabled {
+		  border-color: #ccc;
+		  color: #ccc;
+		  cursor: not-allowed;
+		}
+		
+		#quantity-input {
+		  width: 60px;
+		  text-align: center;
+		  border: 1px solid #ddd;
+		  padding: 5px;
+		  border-radius: 4px;
+		}
+		
+		/* Modal Buttons */
+		.modal-buttons {
+		  display: flex;
+		  justify-content: flex-end;
+		  gap: 10px;
+		}
+		
+		.modal-buttons button {
+		  padding: 10px 20px;
+		  border: none;
+		  border-radius: 4px;
+		  cursor: pointer;
+		  transition: background 0.3s;
+		}
+		
+		.modal-buttons .confirm {
+		  background: #004aad;
+		  color: #fff;
+		}
+		
+		.modal-buttons .confirm:hover {
+		  background: #0080ff;
+		}
+		
+		.modal-buttons .cancel {
+		  background: #ddd;
+		  color: #333;
+		}
+		
+		.modal-buttons .cancel:hover {
+		  background: #bbb;
+		}
+		
+		/* Overlay Styles */
+		.overlay {
+		  display: none;
+		  position: fixed;
+		  top: 0;
+		  left: 0;
+		  width: 100%;
+		  height: 100%;
+		  background: rgba(0, 0, 0, 0.5);
+		  z-index: 999;
+		}
+		
+		.overlay.active {
+		  display: block;
+		}
+		
+		.shop-container {
+		    display: grid;
+		    grid-template-columns: 200px 1fr;
+		    gap: 2rem;
+		    padding: 2rem;
+		    background: #ffffff;
+		    border-radius: 12px;
+		    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+		    margin: 2rem 0;
+		}
+		
+		.shop-image img {
+		    width: 100%;
+		    height: 200px;
+		    object-fit: cover;
+		    border-radius: 8px;
+		    border: 2px solid #f0f0f0;
+		}
+		
+		.shop-details h1 {
+		    font-size: 2.2rem;
+		    color: #1a1a1a;
+		    margin-bottom: 0.5rem;
+		}
+		
+		.shop-address {
+		    display: flex;
+		    align-items: center;
+		    gap: 0.75rem;
+		    color: #666;
+		    margin-bottom: 1.5rem;
+		}
+		
+		.shop-address i {
+		    color: #004aad;
+		    font-size: 1.2rem;
+		}
+		
+		.shop-contact p {
+		    display: flex;
+		    align-items: center;
+		    gap: 0.75rem;
+		    margin: 0.5rem 0;
+		    color: #444;
+		}
+		
+		.shop-contact i {
+		    width: 24px;
+		    color: #004aad;
+		}
+		
+		.shop-status {
+		    margin-top: 1.5rem;
+		}
+		
+		.shop-status span {
+		    padding: 0.5rem 1rem;
+		    border-radius: 24px;
+		    font-weight: 500;
+		}
+		
+		.shop-status .open {
+		    background: #e8f5e9;
+		    color: #2e7d32;
+		}
+		
+		.shop-status .closed {
+		    background: #ffebee;
+		    color: #c62828;
+		}
+		
+		/* Enhanced Cart Modal Styles */
+		/* Cart Modal Styles */
+		#cart-modal {
+		    display: none;
+		    position: fixed;
+		    top: 50%;
+		    left: 50%;
+		    transform: translate(-50%, -50%);
+		    width: 90%;
+		    max-width: 500px;
+		    background: #fff;
+		    border-radius: 12px;
+		    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+		    z-index: 1000;
+		    padding: 20px;
+		    overflow: hidden;
+		}
+		
+		#cart-modal.active {
+		    display: block;
+		}
+		
+		/* Modal Header */
+		#cart-modal h3 {
+		    margin: 0 0 20px 0;
+		    font-size: 1.5rem;
+		    color: #004aad;
+		    text-align: center;
+		    padding-bottom: 15px;
+		    border-bottom: 1px solid #e0e0e0;
+		}
+		
+		/* Cart Items Table */
+		#cart-modal table {
+		    width: 100%;
+		    border-collapse: collapse;
+		    margin-bottom: 20px;
+		}
+		
+		#cart-modal th,
+		#cart-modal td {
+		    padding: 12px;
+		    text-align: center;
+		    border-bottom: 1px solid #e0e0e0;
+		}
+		
+		#cart-modal th {
+		    background: #f8f8f8;
+		    color: #004aad;
+		    font-weight: 600;
+		}
+		
+		#cart-modal td {
+		    color: #333;
+		}
+		
+		/* Remove Button */
+		#cart-modal .remove {
+		    background: none;
+		    border: none;
+		    color: #ff4444;
+		    cursor: pointer;
+		    font-size: 1.2rem;
+		    transition: color 0.3s;
+		}
+		
+		#cart-modal .remove:hover {
+		    color: #cc0000;
+		}
+		
+		/* Quantity Display */
+		#cart-modal .quantity-display {
+		    display: inline-block;
+		    padding: 5px 10px;
+		    border: 1px solid #ddd;
+		    border-radius: 4px;
+		    background: #f8f8f8;
+		    font-size: 0.9rem;
+		}
+		
+		/* Total Row */
+		#cart-modal tr:last-child td {
+		    font-weight: 600;
+		    color: #004aad;
+		    border-bottom: none;
+		}
+		
+		/* Order Button */
+		#cart-modal .order-button {
+		    width: 100%;
+		    background: #004aad;
+		    color: white;
+		    border: none;
+		    padding: 12px;
+		    border-radius: 8px;
+		    font-size: 1.1rem;
+		    cursor: pointer;
+		    display: flex;
+		    align-items: center;
+		    justify-content: center;
+		    gap: 10px;
+		    transition: background 0.3s;
+		}
+		
+		#cart-modal .order-button:hover {
+		    background: #003b8a;
+		}
+		
+		/* Overlay Styles */
+		#overlay {
+		    display: none;
+		    position: fixed;
+		    top: 0;
+		    left: 0;
+		    width: 100%;
+		    height: 100%;
+		    background: rgba(0, 0, 0, 0.5);
+		    z-index: 999;
+		}
+		
+		#overlay.active {
+		    display: block;
+		}
+		
+    </style>
+</head>
+<body>
+    <!-- Main Header -->
+    <header>
+        <h1>Khine Myanmar</h1>
+	 		<div class="menu-section">
+            <div class="button-section">
+                <div class="profile-view">
+                	<button id="cart-button"><i class="fas fa-shopping-cart"></i> Cart</button>
+                    <img th:src="@{${customer.profileImage}}" alt="Profile">
+                    <p style="color: black;"><span th:text="${customer.firstName} + ' ' + ${customer.lastName}"></span></p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Secondary Header for Navigation -->
+    <div class="nav-header">
+        <nav>
+            <a th:href="@{/ecom/user/home}">Home</a>
+            <a th:href="@{/ecom/user/view-shops}">Shops</a>
+            <a th:href="@{/ecom/user/view-products}">Products</a>
+            <a th:href="@{/ecom/user/order-history}">Your Orders</a>
+            <a th:href="@{/ecom/user/edit-profile}">Edit Profile</a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <main>
+    	<div class="shop-container">
+		    <div class="shop-image">
+		        <img th:src="@{${shop.shopImage}}" alt="Shop Image">
+		    </div>
+		    <div class="shop-details">
+		        <h1 th:text="${shop.shopName}"></h1>
+		        <div class="shop-address">
+		            <i class="fas fa-map-marker-alt"></i>
+		            <span th:text="${shop.address}"></span>
+		        </div>
+		        <div class="shop-contact">
+		            <p><i class="fas fa-phone"></i> <span th:text="${shop.contactNumber}"></span></p>
+		            <p><i class="fas fa-envelope"></i> <span th:text="${shop.ownerEmail}"></span></p>
+		        </div>
+		        <div class="shop-status">
+		            <span th:classappend="${shop.status} ? 'open' : 'closed'">
+		                <i th:class="${shop.status} ? 'fas fa-door-open' : 'fas fa-door-closed'"></i>
+		                <span th:text="${shop.status} ? 'Open Now' : 'Closed'"></span>
+		            </span>
+		        </div>
+		    </div>
+		</div>
+       
+		<form th:action="@{/ecom/user/search-products/{shopId}(shopId=${shop.shopId})}" method="get" class="search">
+		    <div style="display: flex; gap: 20px; align-items: center;">
+		        <div style="flex-grow: 1;">
+		            <input type="text" 
+		                   placeholder="Search in menu" 
+		                   id="searchInput" 
+		                   name="query"
+		                   th:value="${param.query}">
+		            <button type="submit"><i class="fas fa-search"></i></button>
+		        </div>
+		        <div class="category-filter">
+		            <button th:each="category : ${categories}" 
+		                    th:text="${category.categoryName}">
+		            </button>
+		        </div>
+		    </div>
+		</form>
+        
+        <div class="table-container">
+	    
+	    	<div class="product-container">
+			    <div class="category-group">
+			        <div class="product-list" style="display: grid; grid-template-columns: repeat(2, 0.33fr); gap: 20px;">
+			            <div th:each="product : ${products}" class="product-card">
+			                <div class="product-image">
+			                    <img th:src="@{${product.productImage}}" alt="Default Product Image">
+			                </div>
+			                
+			                <div class="product-details">
+			                    <h6><span th:text="${product.productName}"></span></h6>
+			                    <p><span th:text="${product.category.categoryName}"></span></p>
+			                    <b><span style=" color: #004aad;" th:text="${#numbers.formatDecimal(product.unitPrice, 1, 'COMMA', 0, 'POINT')} + ' MMK'"></span> </b>
+			                    <p><span th:text="${product.description}"></span></p>
+			                </div>
+			              	<div class="product-actions" th:with="tmp=${@productShopService.findProductByProductIdAndShopId(shop.shopId, product.productId)}">
+							    <form th:action="@{/ecom/user/add-to-cart/{shopId}(shopId=${shop.shopId})}" method="post">
+							        <input type="hidden" name="productId" th:value="${product.productId}">
+							        <input type="hidden" name="quantity" value="1">
+							        <button type="button" 
+							                th:data-product-name="${product.productName}"
+							                th:data-category="${product.category.categoryName}"
+							                th:data-stock="${tmp.stockQuantity}"
+							                th:data-product-id="${product.productId}"
+							                th:data-unit-price="${product.unitPrice}"
+							                onclick="handleProductClick(this)">
+							            <img th:src="@{/Images/add-to-cart.svg}">
+							        </button>
+							    </form>
+							</div>
+			            </div>
+			        </div>
+			    </div>
+			</div>
+		</div>
+	    
+     	<div class="modal" id="cart-modal">
+		    <h3>🛒 Your Cart</h3>
+		    <div id="cart-items">
+		        <table style="border: none; border-collapse: collapse;">
+		            <thead>
+		                <tr>
+		                    <th></th>
+		                    <th>Name</th>
+		                    <th>Quantity</th>
+		                    <th>Sub Total</th>
+		                </tr>
+		            </thead>
+		            <tbody>
+		                <tr th:each="item : ${cart?.cartItems}">
+		                    <td>
+		                        <form th:action="@{/ecom/user/remove-from-cart/{shopId}(shopId=${shop.shopId})}" method="post">
+		                            <input type="hidden" name="productId" th:value="${item.value.product.productId}">
+		                            <button type="submit" class="remove">
+		                                <i class="fa fa-xmark"></i>
+		                            </button>
+		                        </form>
+		                    </td>
+		                    <td th:text="${item.value.product.productName}"></td>
+		                    <td>
+							    <form th:action="@{/ecom/user/update-quantity/{shopId}(shopId=${shop.shopId})}" method="post" 
+							          onsubmit="return updateQuantity(this)">
+							        <input type="hidden" name="productId" th:value="${item.value.product.productId}">
+							        <span class="quantity-display" th:text="${item.value.quantity}"></span>
+							    </form>
+							</td>
+		                    <td th:text="${#numbers.formatDecimal(item.value.product.unitPrice * item.value.quantity, 1, 'COMMA', 0, 'POINT')} + ' MMK'"></td>
+		                    
+		                </tr>
+		                <tr>
+		                    <td colspan="3"><strong>Total:</strong></td>
+		                    <td th:text="${#numbers.formatDecimal(cart.totalAmount, 1, 'COMMA', 0, 'POINT')} + ' MMK'"></td>
+		                </tr>
+		            </tbody>
+		        </table>
+		    </div>
+		    <hr>
+		    <form th:action="@{/ecom/user/place-order/{shopId}/{customerId}(shopId=${shop.shopId}, customerId=${customer.customerId})}" method="post">
+		        <button type="submit" class="order-button">Check Out <i class="fas fa-arrow-right"></i> </button>
+		    </form>
+		</div>
+		
+		<div class="overlay" id="overlay"></div>
+    </main>
+    
+    <div class="modal" id="quantity-modal">
+	    <div class="modal-content">
+	        <h3 id="modal-product-name">Product</h3>
+	        <p id="stock-message" style="color: #666; font-size: 0.9em;"></p>
+	        <div class="quantity-controls">
+	            <button class="quantity-btn minus">-</button>
+	            <input type="number" id="quantity-input" min="1" value="1" readonly>
+	            <button class="quantity-btn plus">+</button>
+	        </div>
+	        <div class="modal-buttons">
+	            <button type="submit" class="confirm" onclick="confirmAddToCart()">Add to Cart</button>
+	            <button class="cancel" onclick="closeModal()">Cancel</button>
+	        </div>
+	    </div>
+	</div>
+	
+	<footer>
+	    <div class="footer-container">
+	        <div class="footer-section">
+	            <h4>About Us</h4>
+	            <p>Khine Myanmar - Your trusted online marketplace for authentic Myanmar products. Quality guaranteed with seamless shopping experience.</p>
+	        </div>
+	        <div class="footer-section">
+	            <h4>Customer Service</h4>
+	            <ul>
+	                <li><a href="#">Contact Us</a></li>
+	                <li><a href="#">Shipping Policy</a></li>
+	                <li><a href="#">Returns & Exchanges</a></li>
+	                <li><a href="#">FAQs</a></li>
+	            </ul>
+	        </div>
+	        <div class="footer-section">
+	            <h4>Follow Us</h4>
+	            <div class="social-links">
+	                <a href="#"><i class="fab fa-facebook"></i></a>
+	                <a href="#"><i class="fab fa-instagram"></i></a>
+	                <a href="#"><i class="fab fa-twitter"></i></a>
+	                <a href="#"><i class="fab fa-linkedin"></i></a>
+	            </div>
+	        </div>
+	    </div>
+	    <div class="footer-bottom">
+	        <p>© 2023 Khine Myanmar. All rights reserved.</p>
+	    </div>
+	</footer>
+       
+    <script>
+        
+        function scrollToCategory(categoryId) {
+            const element = document.getElementById(categoryId);
+            if (element) {
+                // Calculate total height of both headers
+                const mainHeader = document.querySelector('header');
+                const navHeader = document.querySelector('.nav-header');
+                const headerHeight = mainHeader.offsetHeight + navHeader.offsetHeight;
+                
+                // Scroll to element with offset
+                const elementPosition = element.offsetTop - headerHeight;
+                window.scrollTo({
+                    top: elementPosition,
+                    behavior: 'smooth'
+                });
+            }
+        }
+        
+        function handleProductClick(button) {
+            // Get data from attributes
+            const productName = button.dataset.productName;
+            const category = button.dataset.category;
+            const stock = parseInt(button.dataset.stock);
+            const productId = parseInt(button.dataset.productId);
+            const unitPrice = parseFloat(button.dataset.unitPrice);
+            const form = button.closest('form');
+            
+			const isFoodOrDrink = /(food|drink|beverage)/i.test(category);
+	        
+	        if (!isFoodOrDrink && stock <= 0) {
+	            Swal.fire({
+	                icon: 'error',
+	                title: 'Unavailable',
+	                text: 'This product is currently out of stock',
+	                timer: 3000,
+	                showConfirmButton: false
+	            });
+	            return; // Exit function early
+	        }
+
+            // Call your modal function with the retrieved data
+            openModal(productName, unitPrice, productId, category, stock, form);
+        }
+
+        let currentProduct = null;
+        let currentForm = null;
+        let maxQuantity = Infinity;
+
+        function openModal(productName, unitPrice, productId, category, stock, formElement) 
+        {
+            currentProduct = { productId, category, stock };
+            currentForm = formElement;
+            maxQuantity = (category.toLowerCase() !== 'foods and drink') ? stock : Infinity;
+            
+            document.getElementById('modal-product-name').textContent = productName;
+            document.getElementById('quantity-input').value = 1;
+            document.getElementById('stock-message').textContent = 
+                (category.toLowerCase() !== 'foods and drink') 
+                ? `Available stock: ${stock}` 
+                : '';
+            
+            // Show modal and overlay
+            document.getElementById('quantity-modal').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('quantity-modal').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+            currentProduct = null;
+            currentForm = null;
+        }
+
+        function confirmAddToCart() 
+        {
+            const quantity = parseInt(document.getElementById('quantity-input').value);
+            if (quantity > 0) {
+
+                currentForm.querySelector('input[name="quantity"]').value = quantity;
+                currentForm.submit();
+            }
+            closeModal();
+        }
+
+        document.addEventListener('click', function(e) 
+        {
+            const input = document.getElementById('quantity-input');
+            let quantity = parseInt(input.value);
+
+            if (e.target.classList.contains('plus')) {
+                if (quantity < maxQuantity) {
+                    input.value = quantity + 1;
+                }
+            } else if (e.target.classList.contains('minus')) {
+                if (quantity > 1) {
+                    input.value = quantity - 1;
+                }
+            }
+            
+            // Disable plus button if at max quantity
+            const plusBtn = document.querySelector('.quantity-btn.plus');
+            if (plusBtn) 
+            {
+                plusBtn.disabled = parseInt(input.value) >= maxQuantity;
+            }
+        });
+        
+        document.getElementById('cart-button').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('cart-modal').classList.add('active');
+            document.getElementById('overlay').classList.add('active');
+          });
+
+          // Function to close the cart modal
+          function closeCartModal() {
+            document.getElementById('cart-modal').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
+          }
+
+          // Also close the modal if user clicks on the overlay
+          document.getElementById('overlay').addEventListener('click', closeCartModal);
+    </script>
+    
+    <script th:if="${success}">
+	    Swal.fire({
+	        icon: 'success',
+	        title: 'Success!',
+	        text: '[[${success}]]',
+	        timer: 3000,
+	        showConfirmButton: false
+	    });
+	</script>
+	
+	<script th:if="${error}">
+	    Swal.fire({
+	        icon: 'error',
+	        title: 'Error!',
+	        text: '[[${error}]]',
+	        timer: 3000,
+	        showConfirmButton: false
+	    });
+	</script>
+</body>
+</html>

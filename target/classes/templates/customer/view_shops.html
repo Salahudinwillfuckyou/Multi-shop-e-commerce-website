@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grab Turtle | Home</title>
+    <link rel="stylesheet" th:href="@{/css/home_customer_style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+    	.controls
+    	{
+    		display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            margin-left:10px;
+    	}
+    	controls .search, .controls 
+    	{
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .controls input, .controls select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            font-size: 1rem;
+        }
+
+        .search button {
+            padding: 12px 15px;
+            background-color: #004aad;
+            color: #fff;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+            border-style: none;
+        }
+
+        .search button:hover {
+            background-color: #0080ff;
+        }
+        
+        .shop-list 
+		{
+		    display: flex;
+		    flex-wrap: wrap;
+		    justify-content: flex-start;
+		    padding: 0px 25px;
+		}
+		
+		.all-shop-text
+		{
+			position: relative;
+			margin-top: 150px;
+			margin-left: 30px;
+		}
+		
+		.shop {
+		    width: calc(18.90% - 25px);
+		    background: #fff;
+		    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+		    text-align: left;
+		    margin: 10px;
+		    border: 1px solid rgba(83, 83, 83, 0.2);
+		    padding: 20px;
+		    position: relative;
+		    overflow: hidden;
+		    transition: transform 0.3s, box-shadow 0.3s;
+		}
+		.shop:hover {
+		    transform: translateY(-5px); 
+		    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+		}
+		.see-more {
+		    display: flex;
+		    justify-content:center;
+		    align-items:center;
+		    text-align: center;
+		    width: 73%;
+		    margin-top: 110px;
+		}
+		
+		.shop-photo {
+		    width: 100%;
+		    height: 200px;
+		    background: #ddd;
+		    margin-bottom: 15px;
+		    border-radius: 10px;
+		}
+
+        
+    </style>
+</head>
+<body>
+    <!-- Main Header -->
+    <header>
+        <h1>Khine Myanmar</h1>
+	 		<div class="menu-section">
+            <div class="button-section">
+                <div class="profile-view">
+                    <img th:src="@{${customer.profileImage}}" alt="Profile">
+                    <p style="color: black;"><span th:text="${customer.firstName} + ' ' + ${customer.lastName}"></span></p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Secondary Header for Navigation -->
+    <div class="nav-header">
+        <nav>
+            <a th:href="@{/ecom/user/home}">Home</a>
+            <a th:href="@{/ecom/user/view-shops}">Shops</a>
+            <a th:href="@{/ecom/user/view-products}">Products</a>
+            <a th:href="@{/ecom/user/order-history}">Your Orders</a>
+            <a th:href="@{/ecom/user/edit-profile}">Edit Profile</a>
+        </nav>
+    </div>
+
+        <section class="shops">
+        	<h1 class="all-shop-text">All Shops</h1>
+	        <div class="controls">
+	            <form class="search" th:action="@{/ecom/user/search-shops}" method="get">
+				    <input type="text" name="query" id="searchBox" placeholder="Search shops..." required>
+				    <button type="submit"><i class="fas fa-search"></i></button>
+				</form>
+	        </div>
+            <div class="shop-list">
+	            <div th:each="shop : ${shops}" class="shop">
+                    <img class="shop-photo" th:src="@{${shop.shopImage}}" alt="Shop Image">
+                    <h1 th:text="${shop.shopName}"></h1>
+                    <p th:text="${shop.description}"></p>
+                    <a th:href="@{/ecom/user/view-shop/{shopId}(shopId=${shop.shopId})}" class="view-shop-btn">View Shop</a>
+                </div>
+        	</div>
+        </section>
+
+	<footer>
+	    <div class="footer-container">
+	        <div class="footer-section">
+	            <h4>About Us</h4>
+	            <p>Khine Myanmar - Your trusted online marketplace for authentic Myanmar products. Quality guaranteed with seamless shopping experience.</p>
+	        </div>
+	        <div class="footer-section">
+	            <h4>Customer Service</h4>
+	            <ul>
+	                <li><a href="#">Contact Us</a></li>
+	                <li><a href="#">Shipping Policy</a></li>
+	                <li><a href="#">Returns & Exchanges</a></li>
+	                <li><a href="#">FAQs</a></li>
+	            </ul>
+	        </div>
+	        <div class="footer-section">
+	            <h4>Follow Us</h4>
+	            <div class="social-links">
+	                <a href="#"><i class="fab fa-facebook"></i></a>
+	                <a href="#"><i class="fab fa-instagram"></i></a>
+	                <a href="#"><i class="fab fa-twitter"></i></a>
+	                <a href="#"><i class="fab fa-linkedin"></i></a>
+	            </div>
+	        </div>
+	    </div>
+	    <div class="footer-bottom">
+	        <p>© 2023 Khine Myanmar. All rights reserved.</p>
+	    </div>
+	</footer>
+</body>
+</html>

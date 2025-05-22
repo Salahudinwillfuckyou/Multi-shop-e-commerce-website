@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop Registration | Khine Myanmar</title>
+    <link rel="stylesheet" th:href="@{/css/register-style.css}">
+    <style>
+		.container {
+			margin-top: 10px;
+            width: 1200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-section {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-section img {
+            width: 70%;
+            height: auto;
+            object-fit: cover;
+        }
+
+        .form-section {
+            flex: 1;
+            margin-left: -70px;
+        }
+
+        .form-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            width: 40%;
+            text-align: left;
+            padding-right: 10px;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 65%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            transition: border-color 0.3s;
+        }
+        .form-group textarea
+        {
+        	width: 90%;
+        	padding: 8px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            transition: border-color 0.3s;
+        }
+        
+
+        .form-group textarea {
+            resize: none;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #004aad;
+            box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.25);
+        }
+
+        .form-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+        }
+        #address
+        {
+        	margin-left: 23px;
+        	margin-right: 20px;
+        }
+        #shop-description
+        {
+        	margin-left: -3px;
+        	margin-right: 20px;
+        }
+        
+
+        button {
+            width: 30%;
+            padding: 10px;
+            background-color: #004aad;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+    </style>
+    <script>
+        // Function to show an alert message and clear input fields
+        function handleLoginError(message) {
+            if (message) {
+                alert(message);
+                document.getElementById("loginForm").reset();
+            }
+        }
+    </script>
+</head>
+<body th:attr="onload=${errorMessage} != null ? 'handleLoginError(\'' + ${errorMessage} + '\')' : null"> 
+<div class="container">
+        <div class="image-section">
+            <img alt="" th:src="@{/Images/shop_images/shop-register.jpg}">
+        </div>
+        <div class="form-section">
+            <h2>Shop Registration</h2>
+            <form th:action="@{/ecom/shop/register-shop}" method="post" enctype="multipart/form-data" th:object="${shop}" onsubmit="validatePasswords(event)">
+                <div class="form-group">
+                    <label for="shop-name">Shop Name</label>
+                    <input type="text" id="shop-name" th:field ="${shop.shopName}" required>
+                    <label for="owner-email">Owner Email</label>
+                    <input type="email" id="owner-email" th:field ="${shop.ownerEmail}" required>
+                </div>
+                <div class="form-group">
+                    <label for="file">Shop Icon or Logo</label>
+	                <input type="file" id="file" name="file">
+                    <label for="phoneNumber">Phone</label>
+                    <input type="tel" id="phoneNumber" th:field ="${shop.contactNumber}" required>
+                </div>
+                <div class="form-group">
+                    <label for="address">Address</label>
+                    <textarea id="address" th:field="${shop.address}" name="address" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="shop-description">Description</label>
+                    <textarea id="shop-description" th:field ="${shop.description}" name="shop_description" rows="3" placeholder="E.g., Delicious homemade meals"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" th:field ="${shop.password}" required>
+                    <label for="confirmpassword">Confirm</label>
+                    <input type="password" id="confirmpassword" required>
+                </div>
+                <div class="form-footer">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="showPassword" onchange="toggleShowPassword()">
+                        <label for="showPassword">Show Passwords</label>
+                    </div>
+                    <div class="login-link">
+                        Already have an account? <a th:href="@{/ecom/shop/login}">Log In Here</a>
+                    </div>
+                </div>
+                <button type="submit">Register</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        function validatePasswords(event) {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmpassword').value;
+
+            if (password !== confirmPassword) {
+                event.preventDefault();
+                alert("Passwords do not match. Please try again.");
+            }
+        }
+
+        function toggleShowPassword() {
+            const showPassword = document.getElementById('showPassword').checked;
+            document.getElementById('password').type = showPassword ? 'text' : 'password';
+            document.getElementById('confirmpassword').type = showPassword ? 'text' : 'password';
+        }
+    </script>
+</body>
+</html>

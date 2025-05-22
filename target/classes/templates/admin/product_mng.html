@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Management | Admin | Grab Turtle</title>
+    <link rel="stylesheet" th:href="@{/css/home_admin_style.css}">
+    <link rel="stylesheet" th:href="@{/css/product_mng_style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+    	.product-actions a
+    	{
+    		background-color: #004aad;
+    		color: white;
+    		padding: 10px;
+    		cursor: pointer;
+    	}
+    	
+    	.filter-controls {
+		    display: flex;
+		    gap: 10px;
+		    margin-top: 20px;
+		    margin-bottom: 20px;
+		    align-items: center;
+		}
+		
+		.search-form {
+		    display: flex;
+		    gap: 10px;
+		    flex-grow: 1;
+		}
+		
+		.search-form input, .search-form select {
+		    padding: 8px;
+		    border: 1px solid #ddd;
+		}
+		
+		.search-form button {
+		    background: #004aad;
+		    color: white;
+		    border: none;
+		    padding: 8px 15px;
+		    cursor: pointer;
+		}
+		
+		.btn-add {
+		    background: #004aad;
+		    color: white;
+		    padding: 8px 15px;
+		    text-decoration: none;
+		    white-space: nowrap;
+		}
+    </style>
+</head>
+<body>
+		<div class="sidebar">
+        	<a th:href="@{/ecom/admin_home}"><h2>Khine Myanmar</h2></a>
+            <h2>Administrator</h2>
+            <ul class="nav-menu">
+			    			    <li><a th:href="@{/ecom/admin_home}" class="active">
+			        <i class="fas fa-tachometer-alt"></i>
+			        Dashboard
+			    </a></li>
+			    <li><a th:href="@{/ecom/shop_mng_page}">
+			        <i class="fas fa-store"></i>
+			        Shops
+			    </a></li>
+			    <li><a th:href="@{/ecom/delivery_mng_page}">
+			        <i class="fas fa-truck"></i>
+			        Delivery Agents
+			    </a></li>
+			    <li><a th:href="@{/ecom/view-orders}">
+			        <i class="fas fa-shopping-cart"></i>
+			        Orders
+			    </a></li>
+			    <li><a th:href="@{/ecom/customer_mng_page}">
+			        <i class="fas fa-user"></i>
+			        Customers
+			    </a></li>
+			    <li><a th:href="@{/ecom/product_mng_page}">
+			        <i class="fas fa-box"></i>
+			        Products
+			    </a></li>
+			    <li><a th:href="@{/ecom/product_category_mgn_page}">
+			        <i class="fas fa-list"></i>
+			        Categories
+			    </a></li>
+			    <li><a th:href="@{/ecom/edit-profile/{adminId}(adminId=${admin.adminId})}">
+			        <i class="fas fa-edit"></i>
+			        Edit Profile
+			    </a></li>
+			    <li><a th:href="@{/ecom/deli/login}">
+			        <i class="fas fa-sign-out-alt"></i>
+			        Log out
+			    </a></li>
+			</ul>
+        </div>
+	
+	<div class="table-container">
+	    <div>
+	        <div class="filter-controls">
+	            <form class="search-form" th:action="@{/ecom/admin/search-product}" method="get">
+	                <input type="text" name="query" placeholder="Search products..." th:value="${query}">
+	                
+					<select name="categoryId" onchange="this.form.submit()">
+					    <option value="">All Categories</option>
+					    <option th:each="category : ${allCategories}" 
+					            th:value="${category.categoryId}"
+					            th:text="${category.categoryName}"
+					            th:selected="${selectedCategoryId != null} ? 
+					                          ${selectedCategoryId == category.categoryId} : 
+					                          false">
+					    </option>
+					</select>
+				
+					<select name="shopId" onchange="this.form.submit()">
+					    <option value="">All Shops</option>
+					    <option th:each="shop : ${allShops}"
+					            th:value="${shop.shopId}"
+					            th:text="${shop.shopName}"
+					            th:selected="${selectedShopId != null} ? 
+					                         ${selectedShopId == shop.shopId} : 
+					                         false">
+					    </option>
+					</select>
+	                
+	                <button type="submit"><i class="fas fa-search"></i> Search</button>
+	            </form>
+	            
+	            <a th:href="@{/ecom/product_mng_page}" class="btn-add">
+	                <i class="fas fa-refresh"></i> Refresh
+	            </a>
+	        </div>
+	
+	        <div class="product-grid">
+		        <div th:each="product : ${products}" class="product-card" th:with="image=${product.productImage}">
+		            <!-- Product Image -->
+		            <div class="product-image">
+		                <img th:src="@{${product.productImage}}" alt="Product Image">
+		            </div>
+		            <div class="product-details">
+		            	<h3><span th:text="${product.productName}"></span></h3>
+		                <p><span th:text="${product.category.categoryName}"></span></p>
+		                <p><span th:text="${#numbers.formatDecimal(product.unitPrice, 1, 'COMMA', 2, 'POINT')} + ' MMK'"></span></p>
+		                <div th:with="productShop=${@productShopService.findProductShopByProductId(product.productId).get()}">
+						    <p th:if="${productShop != null}">
+						        Sold by: 
+						        <b th:text="${productShop.shop.shopName}"></b>
+						    </p>
+						</div>
+		            </div>
+		        </div>
+		    </div>
+	    </div>
+	</div>
+
+	<script>
+	function toggleDropdown(event, dropdownId) 
+        {
+            removeRedDot();
+            event.stopPropagation();
+            const dropdowns = document.querySelectorAll('.dropdown-content, .dropdown-noti');
+            dropdowns.forEach(dropdown => {
+                if (dropdown.id !== dropdownId) {
+                    dropdown.classList.remove('show');
+                }
+            });
+            const dropdown = document.getElementById(dropdownId);
+            dropdown.classList.toggle('show');
+        }
+
+        window.onclick = function () {
+            const dropdowns = document.querySelectorAll('.dropdown-content, .dropdown-noti');
+            dropdowns.forEach(dropdown => {
+                dropdown.classList.remove('show');
+            });
+        };
+        
+        document.addEventListener("DOMContentLoaded", function() {
+            const hasNewNotifications = "${hasNewNotifications}";
+            const redDot = document.getElementById("notificationDot");
+            if (hasNewNotifications) {
+                showRedDot();
+            } else {
+                removeRedDot();
+            }
+        });
+        
+        function removeRedDot() {
+            const redDot = document.getElementById('notificationDot');
+            if (redDot) {
+                redDot.style.display = 'none'; // Hides the red dot
+            }
+        }
+
+        function showRedDot() {
+            const redDot = document.getElementById('notificationDot');
+            if (redDot) {
+                redDot.style.display = 'block'; // Show the red dot
+            }
+        }
+    </script>
+</body>
+</html>
